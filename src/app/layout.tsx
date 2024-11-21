@@ -1,15 +1,18 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { Providers } from "./providers";
+import "react-toastify/dist/ReactToastify.css";
+import 'react-calendar-heatmap/dist/styles.css';
+import { NextUIProvider } from "@nextui-org/react";
+import { ToastContainer } from "react-toastify";
 
 const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
+  src: "./public/fonts/GeistVF.woff",
   variable: "--font-geist-sans",
   weight: "100 900"
 });
 const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
+  src: "./public/fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
   weight: "100 900"
 });
@@ -24,12 +27,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} light antialiased`}
       >
-        <Providers>{children}</Providers>
+        <NextUIProvider>{children}</NextUIProvider>
+        <ToastContainer></ToastContainer>
       </body>
     </html>
   );
