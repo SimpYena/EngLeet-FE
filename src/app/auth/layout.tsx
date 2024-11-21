@@ -1,0 +1,62 @@
+'use client';
+import { CustomButton } from "@/components/button";
+import {
+  Link,
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem
+} from "@nextui-org/react";
+import Image from "next/image";
+
+import banner from "../public/images/banner.png";
+import { useEffect } from "react";
+
+export default function AuthLayout({
+  children
+}: {
+  children: React.ReactNode;
+}) {
+
+  useEffect(() => {
+    const user = localStorage.getItem('user');
+    if (user) {
+      window.location.href = '/application';
+    }
+  }, [])
+  
+  return (
+    <div>
+      <Navbar className="bg-background pt-3 fixed">
+        <NavbarBrand>
+          <p className="font-bold text-black">ENGLEET</p>
+        </NavbarBrand>
+        <NavbarContent justify="end">
+          <NavbarItem className="lg:flex">
+            <Link href="#" className="text-black">
+              Đăng Nhập
+            </Link>
+          </NavbarItem>
+          <NavbarItem>
+            <CustomButton
+              as={Link}
+              className="bg-black text-white"
+              href="/auth/register"
+              variant="solid"
+            >
+              Đăng Ký
+            </CustomButton>
+          </NavbarItem>
+        </NavbarContent>
+      </Navbar>
+      <div className="h-screen pt-20 flex ">
+        <div className="content-left flex-1 content-end">
+          <Image className="" src={banner} alt="banner"></Image>
+        </div>
+        <div className="content-right flex flex-1 items-center justify-center">
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
