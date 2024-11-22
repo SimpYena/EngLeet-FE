@@ -77,7 +77,7 @@ export default function Main() {
     const result = await UserService.login(formData);
 
     if (result.errors) {
-      toast.error('Login failed');
+      toast.error('Wrong username or password');
       const parsedErrors = result.errors.reduce((acc, error) => {
         acc[error.field] = error.message;
         return acc;
@@ -116,7 +116,7 @@ export default function Main() {
             value={formData.password}
             onChange={handleInputChange}
             name="password"
-            label="Mật khẩu"
+            label="Password"
             fullWidth
             type={isPasswordVisible ? "text" : "password"}
             endContent={
@@ -139,11 +139,11 @@ export default function Main() {
           )}
         </div>
         <Button className="w-full bg-black text-white" onClick={handleSubmit}>
-          Đăng Nhập
+          Login
         </Button>
         <div className="mt-4">
           <Link href="/auth/register" className="text-gray-500 mt-3 mb-6">
-            Chưa có tài khoản
+            Not having account yet?
           </Link>
           <br />
           <div className="text-center">

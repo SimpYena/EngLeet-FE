@@ -33,8 +33,8 @@ export default function AuthLayout({
         </NavbarBrand>
         <NavbarContent justify="end">
           <NavbarItem className="lg:flex">
-            <Link href="#" className="text-black">
-              Đăng Nhập
+            <Link href="/auth/login" className="text-black">
+              Sign In
             </Link>
           </NavbarItem>
           <NavbarItem>
@@ -44,7 +44,7 @@ export default function AuthLayout({
               href="/auth/register"
               variant="solid"
             >
-              Đăng Ký
+              Sign Up
             </CustomButton>
           </NavbarItem>
         </NavbarContent>

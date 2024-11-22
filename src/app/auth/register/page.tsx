@@ -125,17 +125,16 @@ export default function Main() {
         <div className="mb-6">
           <RadioGroup
             className="flex"
-            label="Gender"
             orientation="horizontal"
             name="gender"
             value={formData.gender}
             onChange={handleInputChange}
           >
-            <Radio value="Nam">Male</Radio>
-            <Radio className="ml-5" value="Nữ">
+            <Radio value="Male">Male</Radio>
+            <Radio className="ml-5" value="Female">
               Female
             </Radio>
-            <Radio className="ml-5" value="Khác">
+            <Radio className="ml-5" value="None">
               None
             </Radio>
           </RadioGroup>
