@@ -13,11 +13,11 @@ export default function Main() {
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
-    password: ""
+    password: "",
   });
   const [errors, setErrors] = useState({
     email: "",
-    password: ""
+    password: "",
   });
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export default function Main() {
   const validateForm = () => {
     const newErrors = {
       email: "",
-      password: ""
+      password: "",
     };
     if (!formData.email) {
       newErrors.email = "Email is required.";
@@ -57,7 +57,7 @@ export default function Main() {
       if (newErrors[key]) {
         return false;
       }
-    })
+    });
     return true;
   };
 
@@ -69,27 +69,30 @@ export default function Main() {
     }
 
     setErrors({
-      email: '',
-      password: ''
+      email: "",
+      password: "",
     });
     // Handle successful form submission here
     await UserService.login(formData);
     const result = await UserService.login(formData);
 
     if (result.errors) {
-      toast.error('Wrong username or password');
-      const parsedErrors = result.errors.reduce((acc, error) => {
-        acc[error.field] = error.message;
-        return acc;
-      }, {
-        email: '',
-        password: ''
-      });
+      toast.error("Wrong username or password");
+      const parsedErrors = result.errors.reduce(
+        (acc, error) => {
+          acc[error.field] = error.message;
+          return acc;
+        },
+        {
+          email: "",
+          password: "",
+        }
+      );
       setErrors(parsedErrors);
       return;
     }
 
-    window.location.href = "/application";
+    window.location.href = "/auth/login";
   };
 
   return (

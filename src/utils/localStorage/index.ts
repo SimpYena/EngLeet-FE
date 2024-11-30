@@ -1,4 +1,4 @@
-export const setItem = (key: string, value: any): void => {
+export const setItemIntoStorage = (key: string, value: any): void => {
   try {
     const serializedValue = value;
     localStorage.setItem(key, serializedValue);
@@ -14,7 +14,7 @@ export const getItem = (key: string): any | null => {
       return null;
     }
 
-    if (typeof serializedValue === 'string') {
+    if (typeof serializedValue === "string") {
       return serializedValue;
     }
 
