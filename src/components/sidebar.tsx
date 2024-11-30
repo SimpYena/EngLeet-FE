@@ -7,7 +7,8 @@ import {
   User,
   Settings,
 } from "lucide-react";
-
+import logo from "./../app/public/images/logo.png";
+import Image from "next/image";
 const NAV_ITEMS = [
   {
     title: "Homepage",
@@ -55,11 +56,14 @@ export default function Sidebar() {
       <div className="flex flex-col items-center pt-2">
         <div className="p-6">
           <div className="flex flex-col items-center space-y-2">
-            <img
-              src="./../app/public/images/logo.png"
-              alt="Engleet Logo"
-              className="w-16 h-16 rounded-full object-cover"
+            <Image
+              src={logo}
+              alt="logo"
+              className="object-cover"
+              width={100}
+              height={80}
             />
+
             <span className="text-xl font-bold text-blue-600">ENGLEET</span>
           </div>
         </div>
