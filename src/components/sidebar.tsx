@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Home,
   FileText,
@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import logo from "./../app/public/images/logo.png";
 import Image from "next/image";
+import { useRouter } from "next/router";
 const NAV_ITEMS = [
   {
     title: "Homepage",
@@ -49,7 +50,26 @@ const NAV_ITEMS = [
 ];
 
 export default function Sidebar() {
-  const [activeRoute, setActiveRoute] = React.useState("/dashboard");
+  const [activeRoute, setActiveRoute] = React.useState("/application/");
+
+  // refactor to use nextjs router here
+  useEffect(() => {
+    const path = window.location.pathname;
+    const route = path === "/" ? "/dashboard" : path;
+
+    setActiveRoute(route);
+  }, []);
+
+  const setActiveRouteAndRedirect = (path: string) => {
+    if (path === "/dashboard") {
+      setActiveRoute(path);
+      window.location.href = "/application/";
+      return;
+    }
+
+    setActiveRoute(path);
+    window.location.href = `/application${path}`;
+  };
 
   return (
     <div className="flex flex-col h-screen w-72 bg-white border-r border-gray-200">
@@ -77,7 +97,7 @@ export default function Sidebar() {
               return (
                 <li key={item.path} className="text-lg">
                   <button
-                    onClick={() => setActiveRoute(item.path)}
+                    onClick={() => setActiveRouteAndRedirect(item.path)}
                     className={`w-full flex items-center px-4 py-2 rounded-lg text-left ${
                       isActive
                         ? "text-black font-semibold"

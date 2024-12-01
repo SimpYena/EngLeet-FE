@@ -1,16 +1,6 @@
 "use client";
 import Sidebar from "@/components/sidebar";
 import userService from "@/utils/services/user.service";
-import {
-  HomeIcon,
-  ClipboardIcon,
-  UserIcon,
-  ChartBarIcon,
-  Cog6ToothIcon,
-} from "@heroicons/react/24/solid";
-import { Button } from "@nextui-org/react";
-import Image from "next/image";
-import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
 
 export default function ApplicationLayout({
@@ -18,9 +8,6 @@ export default function ApplicationLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const pathName = usePathname();
-  const router = useRouter();
-
   useEffect(() => {
     userService
       .loadCurrentUser()

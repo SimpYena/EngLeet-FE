@@ -1,30 +1,29 @@
-'use client';
+"use client";
 import { CustomButton } from "@/components/button";
 import {
   Link,
   Navbar,
   NavbarBrand,
   NavbarContent,
-  NavbarItem
+  NavbarItem,
 } from "@nextui-org/react";
 import Image from "next/image";
+import banner from "../../public/images/banner.png";
 
-import banner from "../public/images/banner.png";
 import { useEffect } from "react";
 
 export default function AuthLayout({
-  children
+  children,
 }: {
   children: React.ReactNode;
 }) {
-
   useEffect(() => {
-    const user = localStorage.getItem('user');
+    const user = localStorage.getItem("user");
     if (user) {
-      window.location.href = '/application';
+      window.location.href = "/application";
     }
-  }, [])
-  
+  }, []);
+
   return (
     <div>
       <Navbar className="bg-background pt-3 fixed">
