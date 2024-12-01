@@ -4,20 +4,23 @@ import { ChangeEvent, useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import UserService from "@/utils/services/user.service";
 import toast from "@/components/toast";
+import { setItemIntoStorage } from "@/utils/localStorage";
+import { redirect } from "next/dist/server/api-utils";
+
 export default function Main() {
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [formData, setFormData] = useState({
-    email: '',
-    full_name: '',
-    gender: 'None',
-    password: '',
-    confirmPassword: ''
+    email: "",
+    full_name: "",
+    gender: "None",
+    password: "",
+    confirmPassword: "",
   });
   const [errors, setErrors] = useState({
     email: "",
     full_name: "",
-    password: ""
+    password: "",
   });
   const togglePasswordVisible = () => setPasswordVisible(!isPasswordVisible);
   const toggleConfirmPasswordVisible = () =>
@@ -31,13 +34,13 @@ export default function Main() {
     const newErrors = {
       email: "",
       full_name: "",
-      password: ""
+      password: "",
     };
     if (!formData.email) {
       newErrors.email = "Email is required.";
     }
 
-    if (!formData.name) {
+    if (!formData.full_name) {
       newErrors.full_name = "Name is required.";
     }
 
@@ -55,7 +58,7 @@ export default function Main() {
       if (newErrors[key]) {
         return false;
       }
-    })
+    });
     return true;
   };
 
@@ -67,27 +70,31 @@ export default function Main() {
     }
 
     setErrors({
-      email: '',
-      full_name: '',
-      password: ''
+      email: "",
+      full_name: "",
+      password: "",
     });
 
     const result = await UserService.register(formData);
-    console.log(result);
+
     if (result.errors) {
-      toast.error('Register failed');
-      const parsedErrors = result.errors.reduce((acc, error) => {
-        acc[error.field] = error.message;
-        return acc;
-      }, {
-        email: '',
-        full_name: '',
-        password: ''
-      });
+      toast.error("Register failed");
+      const parsedErrors = result.errors.reduce(
+        (acc, error) => {
+          acc[error.field] = error.message;
+          return acc;
+        },
+        {
+          email: "",
+          full_name: "",
+          password: "",
+        }
+      );
       setErrors(parsedErrors);
       return;
     }
-    // Handle successful form submission here
+
+    toast.success("Register success");
   };
 
   return (

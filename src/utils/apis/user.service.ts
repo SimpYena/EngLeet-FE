@@ -4,7 +4,7 @@ import { getItem } from "../localStorage";
 // import { EXPIRED_TOKEN } from "../const/errorCode";
 const api = axios.create({
   headers: {
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
   },
   baseURL: "http://18.142.54.43:3000/api/v1",
 });
@@ -13,11 +13,11 @@ const getToken = () => {
   const accessToken = getItem("access_token");
 
   if (!accessToken) {
-    return getItem('refresh_token') || null;
+    return getItem("refresh_token") || null;
   }
 
   return accessToken;
-}
+};
 
 // Attach access token to every request
 api.interceptors.request.use(async (config) => {
@@ -71,7 +71,7 @@ api.interceptors.request.use(async (config) => {
 const request = async (method = "GET", url: string, payload?: object) => {
   const config: AxiosRequestConfig = {
     method,
-    url
+    url,
   };
   if (method === "GET") {
     config.params = payload;
@@ -87,7 +87,7 @@ const register = async ({ email, full_name, gender, password }: User) => {
     email,
     full_name,
     gender,
-    password
+    password,
   });
 };
 
@@ -117,5 +117,5 @@ export default {
   logout,
   verifyEmail,
   getCurrentUser,
-  refreshToken
+  refreshToken,
 };

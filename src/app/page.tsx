@@ -6,9 +6,8 @@ import {
   NavbarItem,
   Link,
 } from "@nextui-org/react";
-
 import Image from "next/image";
-import banner from "./public/images/banner.png"
+import banner from "./public/images/banner.png";
 
 export default function App() {
   return (

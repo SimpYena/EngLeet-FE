@@ -1,56 +1,8 @@
 "use client";
-import {
-  Button,
-  Card,
-  CardHeader,
-  CardFooter,
-  Image,
-  CardBody,
-  Avatar
-} from "@nextui-org/react";
 import { ChangeEvent, useState } from "react";
-import { UserIcon } from "@heroicons/react/24/outline";
-import CalendarHeatmap from "react-calendar-heatmap";
-import { Tooltip as ReactTooltip } from "react-tooltip";
 import "./style.css";
-
-function TestCard() {
-  return (
-    <Card
-      isFooterBlurred
-      className="w-[250px] h-[300px] col-span-12 sm:col-span-5"
-    >
-      <CardHeader className="pb-0 py-2 px-4 flex-col items-start backdrop-blur bg-white/30">
-        <h4 className="text-black font-medium text-xl">
-          The very long test name
-        </h4>
-        <small className="flex">
-          <UserIcon className="w-4" />
-          13 participants
-        </small>
-      </CardHeader>
-      <Image
-        removeWrapper
-        alt="Card example background"
-        className="z-0 w-full h-full scale-125 -translate-y-6 object-cover"
-        src="https://cdn0.fahasa.com/media/catalog/product/9/7/9786048557683.jpg"
-      />
-      <CardFooter className="absolute bg-white/30 bottom-0 border-t-1 border-zinc-100/50 z-10 justify-between">
-        <div>
-          <p className="text-black text-tiny">Available soon.</p>
-          <p className="text-black text-tiny">Get notified.</p>
-        </div>
-        <Button
-          className="text-tiny bg-primary text-white"
-          radius="full"
-          size="sm"
-        >
-          Join
-        </Button>
-      </CardFooter>
-    </Card>
-  );
-}
+import RecentTests from "@/components/recentTest";
+import AssessmentCard from "@/components/assessment-card";
 
 export default function Main() {
   const [isPasswordVisible, setPasswordVisible] = useState(false);
@@ -60,26 +12,19 @@ export default function Main() {
     name: "",
     gender: "none",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
   const [errors, setErrors] = useState({
     email: "",
     name: "",
-    password: ""
+    password: "",
   });
-  const togglePasswordVisible = () => setPasswordVisible(!isPasswordVisible);
-  const toggleConfirmPasswordVisible = () =>
-    setConfirmPasswordVisible(!isConfirmPasswordVisible);
-
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const validateForm = () => {
     const newErrors = {
       email: "",
       name: "",
-      password: ""
+      password: "",
     };
     if (!formData.email) {
       newErrors.email = "Email is required.";
@@ -107,7 +52,7 @@ export default function Main() {
       setErrors({
         email: "",
         name: "",
-        password: ""
+        password: "",
       });
       // Handle successful form submission here
       console.log("Form Data: ", formData);
@@ -133,7 +78,7 @@ export default function Main() {
   const randomValues = getRange(200).map((index) => {
     return {
       date: shiftDate(today, -index),
-      count: getRandomInt(1, 3)
+      count: getRandomInt(1, 3),
     };
   });
 
@@ -142,42 +87,9 @@ export default function Main() {
       <main className="flex-1 p-6">
         <h2 className="text-2xl font-bold mb-6">Dashboard</h2>
         <div className="grid grid-cols-12 gap-6">
-          {/* Streak Section */}
+          {/* Recent Tests Section */}
           <div className="col-span-12 lg:col-span-6">
-            <h3 className="text-lg font-semibold mb-4">Streaks</h3>
-            <div className="bg-white shadow-lg p-6 rounded-lg">
-              <p className="font-bold mb-4">
-                You are on{" "}
-                <span className="bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text text-transparent">
-                  7 days streak
-                </span>
-                , keep it up!
-              </p>
-              <div className="bg-gray-200 w-100 rounded">
-                <CalendarHeatmap
-                  showWeekdayLabels
-                  gutterSize={2}
-                  startDate={shiftDate(today, -300)}
-                  endDate={today}
-                  values={randomValues}
-                  classForValue={(value) => {
-                    if (!value) {
-                      return "color-empty";
-                    }
-                    return `color-gitlab-${value.count}`;
-                  }}
-                  tooltipDataAttrs={(value) => {
-                    return {
-                      "data-tooltip-id": "my-tooltip",
-                      "data-tooltip-content": `Joined ${
-                        value.count
-                      } test on ${value.date?.toLocaleDateString("en-US")}`
-                    };
-                  }}
-                />
-                <ReactTooltip id="my-tooltip" />
-              </div>
-            </div>
+            <RecentTests />
           </div>
 
           {/* Ranking Section */}
@@ -219,47 +131,22 @@ export default function Main() {
               </div>
             </div>
           </div>
-          {/* Recent Tests Section */}
-          <div className="col-span-12 lg:col-span-6">
-            <h3 className="text-lg font-semibold mb-4">Latest Test</h3>
-            <div className="flex space-x-4">
-              <TestCard />
-              <TestCard />
-            </div>
-          </div>
 
           {/* Assessment Section */}
           <div className="col-span-12 lg:col-span-6">
-            <h3 className="text-lg font-semibold mb-4">Assessment Test</h3>
-            <div className="w-[300px]">
-              <Card className="py-4">
-                <CardHeader className="pb-0 pt-2 px-4 flex-col items-start flex flex-row">
-                  <div>
-                    <h4 className="font-bold text-large"></h4>
-                    <p className="text-tiny uppercase font-bold">Evaluate your english talent</p>
-                    <small className="text-default-500">
-                      100 participants known their skills
-                    </small>
-                  </div>
-                  <div>
-                    <Button
-                      className="text-tiny bg-primary text-white"
-                      radius="full"
-                      size="sm"
-                    >
-                      Join
-                    </Button>
-                  </div>
-                </CardHeader>
-                {/* <CardBody className="overflow-visible py-2">
-                <Image
-                  alt="Card background"
-                  className="object-cover rounded-xl"
-                  src="https://nextui.org/images/hero-card-complete.jpeg"
-                  width={270}
-                />
-              </CardBody> */}
-              </Card>
+            <AssessmentCard />
+          </div>
+
+          <div className="col-span-12 lg:col-span-6">
+            <h3 className="text-lg font-semibold mb-4">Streaks</h3>
+            <div className="bg-white shadow-lg p-6 rounded-lg">
+              <p className="font-bold mb-4">
+                You are on{" "}
+                <span className="bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text text-transparent">
+                  7 days streak
+                </span>
+                , keep it up!
+              </p>
             </div>
           </div>
         </div>
