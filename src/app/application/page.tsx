@@ -83,7 +83,7 @@ export default function Main() {
   });
 
   return (
-    <div className="flex h-screen bg-gray-50 flex-1 px-10">
+    <div className="container mx-auto p-6 space-y-6">
       <main className="flex-1 p-6">
         <h2 className="text-2xl font-bold mb-6">Dashboard</h2>
         <div className="grid grid-cols-12 gap-6">

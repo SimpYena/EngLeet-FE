@@ -21,17 +21,15 @@ const quizCards: QuizCard[] = Array(6).fill({
 
 export default function Test() {
   return (
-    <div className="min-h-screen p-6">
+    <div className="container mx-auto p-6 space-y-6">
       <div className=" mx-auto space-y-6 p-6">
         <h1 className="text-2xl font-bold">Làm Test</h1>
 
         <div className="flex items-center justify-between ">
           <div className="w-full flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" className="gap-2 text-lg">
-                <ClipboardList className="h-4 w-4" />
-                All Tests
-              </Button>
+            <div className="gap-2 text-lg flex items-center flex-row">
+              <ClipboardList className="h-4 w-4" />
+              <h3 className="font-bold">All Tests</h3>
             </div>
 
             <div className="flex items-center gap-2">

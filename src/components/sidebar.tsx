@@ -9,24 +9,26 @@ import {
 } from "lucide-react";
 import logo from "./../app/public/images/logo.png";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
 const NAV_ITEMS = [
   {
     title: "Homepage",
     icon: Home,
-    path: "/dashboard",
+    path: "/application",
     label: "Trang chủ",
   },
   {
     title: "Test",
     icon: FileText,
-    path: "/test",
+    path: "/application/test",
     label: "Làm tests",
   },
   {
     title: "Quiz",
     icon: HelpCircle,
-    path: "/quiz",
+    path: "/application/quiz",
     label: "Quiz",
   },
   {
@@ -50,26 +52,7 @@ const NAV_ITEMS = [
 ];
 
 export default function Sidebar() {
-  const [activeRoute, setActiveRoute] = React.useState("/application/");
-
-  // refactor to use nextjs router here
-  useEffect(() => {
-    const path = window.location.pathname;
-    const route = path === "/" ? "/dashboard" : path;
-
-    setActiveRoute(route);
-  }, []);
-
-  const setActiveRouteAndRedirect = (path: string) => {
-    if (path === "/dashboard") {
-      setActiveRoute(path);
-      window.location.href = "/application/";
-      return;
-    }
-
-    setActiveRoute(path);
-    window.location.href = `/application${path}`;
-  };
+  const pathname = usePathname();
 
   return (
     <div className="flex flex-col h-screen w-72 bg-white border-r border-gray-200">
@@ -83,7 +66,6 @@ export default function Sidebar() {
               width={100}
               height={80}
             />
-
             <span className="text-xl font-bold text-blue-600">ENGLEET</span>
           </div>
         </div>
@@ -92,22 +74,19 @@ export default function Sidebar() {
           <ul className="space-y-2">
             {NAV_ITEMS.map((item) => {
               const Icon = item.icon;
-              const isActive = activeRoute === item.path;
+              const isActive = pathname === item.path;
 
               return (
-                <li key={item.path} className="text-lg">
-                  <button
-                    onClick={() => setActiveRouteAndRedirect(item.path)}
-                    className={`w-full flex items-center px-4 py-2 rounded-lg text-left ${
-                      isActive
-                        ? "text-black font-semibold"
-                        : "text-gray-700 hover:bg-gray-100"
+                <Link href={item.path} key={item.path} className="text-lg">
+                  <div
+                    className={`w-full flex items-center px-4 py-2 rounded-lg text-left cursor-pointer ${
+                      isActive ? "font-bold" : "text-gray-700 hover:bg-gray-100"
                     }`}
                   >
                     <Icon className="w-5 h-5 mr-3" />
                     <span>{item.label}</span>
-                  </button>
-                </li>
+                  </div>
+                </Link>
               );
             })}
           </ul>
