@@ -92,15 +92,15 @@ export default function QuizManagement() {
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className=" mx-auto space-y-6 p-6">
-        <h1 className="text-2xl font-bold">Làm Quiz</h1>
+        <h1 className="text-4xl font-bold">Làm Quiz</h1>
         <div className="flex gap-4">
           <Input
             placeholder="Search"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="flex-grow w-4/5"
+            className="flex-grow w-4/5 h-12"
           />
-          <Button variant="outline" className="w-1/5">
+          <Button variant="default" className="w-1/5  h-12">
             Bộ lọc
             <ChevronDown className="ml-2 h-4 w-4" />
           </Button>

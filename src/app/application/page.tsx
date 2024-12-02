@@ -85,7 +85,7 @@ export default function Main() {
   return (
     <div className="container mx-auto p-6 space-y-6">
       <main className="flex-1 p-6">
-        <h2 className="text-2xl font-bold mb-6">Dashboard</h2>
+        <h2 className="text-4xl font-bold mb-6">Dashboard</h2>
         <div className="grid grid-cols-12 gap-6">
           {/* Recent Tests Section */}
           <div className="col-span-12 lg:col-span-6">
