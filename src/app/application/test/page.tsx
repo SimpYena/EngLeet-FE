@@ -23,7 +23,7 @@ export default function Test() {
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className=" mx-auto space-y-6 p-6">
-        <h1 className="text-4xl font-bold">Làm Test</h1>
+        <h1 className="text-4xl font-bold">Practice Test</h1>
 
         <div className="flex items-center justify-between ">
           <div className="w-full flex items-center justify-between gap-4">
@@ -35,11 +35,11 @@ export default function Test() {
             <div className="flex items-center gap-2">
               <Button variant="ghost" size="sm" className="gap-2 text-lg">
                 <Filter className="h-4 w-4" />
-                Bộ lọc
+                Filter
               </Button>
               <Button variant="ghost" size="sm" className="gap-2 text-lg">
                 <SortDesc className="h-4 w-4" />
-                Sắp xếp theo
+                Sort By
               </Button>
             </div>
           </div>

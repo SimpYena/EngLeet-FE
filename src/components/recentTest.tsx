@@ -6,7 +6,7 @@ export default function RecentTests() {
   return (
     <div className="w-[90%] max-w-4xl">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-medium">Bài test gần đây</h2>
+        <h2 className="text-lg font-semibold mb-4">Recently test</h2>
         <div className="flex gap-2">
           <button className="p-2 hover:bg-gray-100 rounded-full">
             <ChevronLeft className="w-5 h-5" />
@@ -64,7 +64,7 @@ export default function RecentTests() {
             </p>
             <div className="absolute bottom-0 left-0 right-0 p-6 flex justify-center">
               <button className="w-4/5 bg-[#2F2F2F] text-white px-6 py-2.5 rounded-lg hover:bg-gray-800 transition-colors">
-                Làm ngay
+                Do now!
               </button>
             </div>
           </div>
