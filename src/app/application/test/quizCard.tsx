@@ -35,7 +35,7 @@ export const QuizCard = ({
             size="lg"
             className="w-24 bg-zinc-900 text-white rounded-medium"
           >
-            Làm ngay
+            Do now!
           </Button>
         </div>
       </CardContent>

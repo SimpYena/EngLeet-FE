@@ -7,7 +7,7 @@ export default function AssessmentCard() {
       <div className="max-w-md">
         <div className="flex items-center gap-2 mb-8">
           <Pencil className="w-6 h-6" />
-          <h1 className="text-xl font-medium">Làm bài đánh giá năng lực</h1>
+          <h1 className="text-xl font-medium">Do the assessment test</h1>
         </div>
 
         <div className="bg-white rounded-3xl p-8 flex flex-col items-center shadow-sm">
@@ -22,7 +22,7 @@ export default function AssessmentCard() {
           />
 
           <button className="w-4/5 bg-gray-900 text-white rounded-xl py-4 font-medium hover:bg-gray-800 transition-colors">
-            Kiểm tra ngay
+            Do right now!
           </button>
         </div>
       </div>

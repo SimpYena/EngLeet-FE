@@ -17,13 +17,13 @@ const NAV_ITEMS = [
     title: "Homepage",
     icon: Home,
     path: "/application",
-    label: "Trang chủ",
+    label: "Home",
   },
   {
     title: "Test",
     icon: FileText,
     path: "/application/test",
-    label: "Làm tests",
+    label: "Tests",
   },
   {
     title: "Quiz",
@@ -35,19 +35,19 @@ const NAV_ITEMS = [
     title: "Rank",
     icon: Trophy,
     path: "/rank",
-    label: "Bảng xếp hạng",
+    label: "Leaderboard",
   },
   {
     title: "Profile",
     icon: User,
     path: "/profile",
-    label: "Profile R",
+    label: "Profile",
   },
   {
     title: "Setting",
     icon: Settings,
     path: "/setting",
-    label: "Cài Đặt",
+    label: "Settings",
   },
 ];
 

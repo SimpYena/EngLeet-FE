@@ -92,7 +92,7 @@ export default function QuizManagement() {
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className=" mx-auto space-y-6 p-6">
-        <h1 className="text-4xl font-bold">Làm Quiz</h1>
+        <h1 className="text-4xl font-bold">Quizz</h1>
         <div className="flex gap-4">
           <Input
             placeholder="Search"
@@ -101,24 +101,24 @@ export default function QuizManagement() {
             className="flex-grow w-4/5 h-12"
           />
           <Button variant="default" className="w-1/5  h-12">
-            Bộ lọc
+            Filter
             <ChevronDown className="ml-2 h-4 w-4" />
           </Button>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {[
-            "Lọc theo",
-            "Độ khó",
-            "Kỹ năng",
-            "Trạng thái",
-            "Nội dung chủ đề",
+            "Filter by",
+            "Difficulty",
+            "Skill",
+            "Status",
+            "Topic",
           ].map((label) => (
             <Select key={label}>
               <SelectGroup>
                 <SelectLabel>{label}</SelectLabel>
                 <SelectTrigger>
-                  <SelectValue placeholder={`Chọn ${label.toLowerCase()}`} />
+                  <SelectValue placeholder={`Choose ${label.toLowerCase()}`} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="option">Option</SelectItem>
@@ -131,17 +131,17 @@ export default function QuizManagement() {
         <div className="flex flex-wrap gap-4 justify-center p-6">
           <Button size={"lg"} className="bg-violet-500 hover:bg-violet-600">
             <Sparkles className="mr-2 h-4 w-4" />
-            Tạo quiz tự động
+            Create random quizz
           </Button>
           <Button size={"lg"} variant="destructive">
-            Hủy thay đổi
+            Cancel changes
           </Button>
           <Button size={"lg"} variant="outline">
-            Chọn ngẫu nhiên
+            Pick random quizz
           </Button>
           <Button size={"lg"}>
             <Search className="mr-2 h-4 w-4" />
-            Tìm kiếm
+            Search
           </Button>
         </div>
 
