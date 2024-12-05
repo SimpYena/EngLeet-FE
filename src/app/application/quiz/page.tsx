@@ -1,4 +1,5 @@
 "use client";
+import { DataTable } from "@/components/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -11,83 +12,138 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
   CheckCircle2,
   ChevronDown,
   FileBarChart,
   Search,
   Sparkles,
 } from "lucide-react";
-import { useState } from "react";
-
-const mockData = [
-  {
-    id: 962,
-    title: "Maximum Width Ramp",
-    solution: true,
-    acceptance: "51.4%",
-    difficulty: "Medium",
-    status: "completed",
-  },
-  {
-    id: 1,
-    title: "Two Sum",
-    solution: true,
-    acceptance: "53.9%",
-    difficulty: "Easy",
-    status: "completed",
-  },
-  {
-    id: 2,
-    title: "Add Two Numbers",
-    solution: true,
-    acceptance: "44.3%",
-    difficulty: "Medium",
-    status: "not-started",
-  },
-  {
-    id: 3,
-    title: "Longest Substring Without Repeating Characters",
-    solution: true,
-    acceptance: "35.6%",
-    difficulty: "Medium",
-    status: "not-started",
-  },
-  {
-    id: 4,
-    title: "Median of Two Sorted Arrays",
-    solution: true,
-    acceptance: "41.7%",
-    difficulty: "Hard",
-    status: "not-started",
-  },
-  {
-    id: 5,
-    title: "Longest Palindromic Substring",
-    solution: true,
-    acceptance: "34.5%",
-    difficulty: "Medium",
-    status: "not-started",
-  },
-  {
-    id: 6,
-    title: "Zigzag Conversion",
-    solution: true,
-    acceptance: "49.5%",
-    difficulty: "Medium",
-    status: "not-started",
-  },
-];
+import { useEffect, useState } from "react";
+import {
+  mapColorToDifficulty,
+  Quiz,
+  QuizDifficulty,
+  QuizFilter,
+} from "./interface";
+import api from "../../../utils/apis/user.service";
 
 export default function QuizManagement() {
-  const [searchTerm, setSearchTerm] = useState("");
+  const DIFFICULTIES = ["Easy", "Medium", "Hard", "Expert"];
+  const TOPICS = ["School", "Environment", "Culture", "Life", "Family"];
+  const TYPE = ["Reading", "Writing", "Listening", "Speaking"];
+
+  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+  const [pagination, setPagination] = useState({
+    total: 0,
+    limit: 5,
+    offset: 0,
+  });
+  const [limit, setLimit] = useState(pagination.limit);
+  const [offset, setOffset] = useState(0);
+  const [difficulties, setDifficulties] = useState<string>("Difficulty");
+  const [topics, setTopics] = useState<string>("Topic");
+
+  const [keyword, setKeyword] = useState<string>();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const [filters, setFilters] = useState<QuizFilter>({
+    limit: limit,
+    offset: offset,
+    difficulties: difficulties,
+    topics: topics,
+    keyword: keyword,
+  });
+
+  const updateFilter = (key: keyof typeof filters, value: any) => {
+    setFilters((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
+
+  useEffect(() => {
+    async function fetchQuizzes() {
+      setLoading(true);
+      try {
+        const response = await api.getQuizzes(filters);
+
+        setQuizzes(response.items);
+        setPagination({
+          total: response.pagination.total,
+          limit: response.pagination.limit,
+          offset: response.pagination.offset,
+        });
+      } catch (error) {
+        console.error("Failed to fetch quizzes:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchQuizzes();
+  }, [filters]);
+
+  const columns = [
+    {
+      header: "Title",
+      accessor: (row: Quiz) => row.title,
+    },
+    {
+      header: "Acceptance",
+      accessor: (row: Quiz) => row.acceptance,
+    },
+    {
+      header: "Difficulty",
+      accessor: (row: Quiz) => (
+        <span
+          className={`px-2 py-1 rounded-full text-xs font-semibold ${mapColorToDifficulty(
+            row.difficulty as QuizDifficulty
+          )}`}
+        >
+          {row.difficulty}
+        </span>
+      ),
+    },
+    {
+      header: "Topic",
+      accessor: (row: Quiz) => (
+        <span className="flex items-center">
+          <FileBarChart className="h-4 w-4 mr-2" />
+          {row.topic}
+        </span>
+      ),
+    },
+    {
+      header: "Type",
+      accessor: (row: Quiz) => (
+        <span className="flex items-center">
+          <CheckCircle2 className="h-4 w-4 mr-2" />
+          {row.type}
+        </span>
+      ),
+    },
+  ];
+
+  const handlePaginationChange = (e: { limit: number; offset: number }) => {
+    setFilters((prev) => ({
+      ...prev,
+      limit: e.limit,
+      offset: e.offset,
+    }));
+  };
+
+  const resetFilter = () => {
+    setFilters({
+      ...filters,
+      difficulties: undefined,
+      topics: undefined,
+      keyword: undefined,
+      type: undefined,
+    });
+
+    setDifficulties("Difficulty");
+    setTopics("Topic");
+  };
 
   return (
     <div className="container mx-auto p-6 space-y-6">
@@ -96,8 +152,8 @@ export default function QuizManagement() {
         <div className="flex gap-4">
           <Input
             placeholder="Search"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            value={keyword}
+            onChange={(e) => updateFilter("keyword", e.target.value)}
             className="flex-grow w-4/5 h-12"
           />
           <Button variant="default" className="w-1/5  h-12">
@@ -105,36 +161,64 @@ export default function QuizManagement() {
             <ChevronDown className="ml-2 h-4 w-4" />
           </Button>
         </div>
-
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {[
-            "Filter by",
-            "Difficulty",
-            "Skill",
-            "Status",
-            "Topic",
-          ].map((label) => (
-            <Select key={label}>
-              <SelectGroup>
-                <SelectLabel>{label}</SelectLabel>
-                <SelectTrigger>
-                  <SelectValue placeholder={`Choose ${label.toLowerCase()}`} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="option">Option</SelectItem>
-                </SelectContent>
-              </SelectGroup>
-            </Select>
-          ))}
-        </div>
+          <Select
+            onValueChange={(value) => updateFilter("difficulties", [value])}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder={difficulties} />
+            </SelectTrigger>
+            <SelectContent>
+              {DIFFICULTIES.map((diff) => (
+                <SelectItem key={diff} value={diff}>
+                  {diff}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
+          <Select
+            onValueChange={(value) => {
+              updateFilter("topics", [value]);
+              setTopics(value);
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder={topics} />
+            </SelectTrigger>
+            <SelectContent>
+              {TOPICS.map((topic) => (
+                <SelectItem key={topic} value={topic}>
+                  {topic}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select onValueChange={(value) => updateFilter("type", [value])}>
+            <SelectTrigger>
+              <SelectValue placeholder="Type" />
+            </SelectTrigger>
+            <SelectContent>
+              {TYPE.map((type) => (
+                <SelectItem key={type} value={type}>
+                  {type}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
         <div className="flex flex-wrap gap-4 justify-center p-6">
           <Button size={"lg"} className="bg-violet-500 hover:bg-violet-600">
             <Sparkles className="mr-2 h-4 w-4" />
             Create random quizz
           </Button>
-          <Button size={"lg"} variant="destructive">
-            Cancel changes
+          <Button
+            size={"lg"}
+            variant="destructive"
+            onClick={() => resetFilter()}
+          >
+            Hủy thay đổi
           </Button>
           <Button size={"lg"} variant="outline">
             Pick random quizz
@@ -145,56 +229,17 @@ export default function QuizManagement() {
           </Button>
         </div>
 
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">Status</TableHead>
-              <TableHead>Title</TableHead>
-              <TableHead className="w-[150px]">Solution</TableHead>
-              <TableHead>Acceptance</TableHead>
-              <TableHead>Difficulty</TableHead>
-              <TableHead className="w-[100px]">Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {mockData.map((quiz) => (
-              <TableRow key={quiz.id}>
-                <TableCell>
-                  {quiz.status === "completed" ? (
-                    <CheckCircle2 className="text-green-500" />
-                  ) : (
-                    <div className="w-4 h-4 rounded-full bg-gray-200" />
-                  )}
-                </TableCell>
-                <TableCell>{quiz.title}</TableCell>
-                <TableCell>
-                  {quiz.solution && <FileBarChart className="text-blue-500" />}
-                </TableCell>
-                <TableCell>{quiz.acceptance}</TableCell>
-                <TableCell>
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs ${
-                      quiz.difficulty === "Easy"
-                        ? "bg-green-100 text-green-800"
-                        : quiz.difficulty === "Medium"
-                        ? "bg-yellow-100 text-yellow-800"
-                        : "bg-red-100 text-red-800"
-                    }`}
-                  >
-                    {quiz.difficulty}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  {quiz.status === "completed" ? (
-                    <CheckCircle2 className="text-green-500" />
-                  ) : (
-                    <div className="w-4 h-4 rounded-full bg-gray-200" />
-                  )}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <DataTable
+          data={quizzes}
+          columns={columns}
+          pagination={{
+            total: pagination.total,
+            limit: pagination.limit,
+            offset: pagination.offset,
+          }}
+          onPaginationChange={handlePaginationChange}
+          loading={loading}
+        />
       </div>
     </div>
   );

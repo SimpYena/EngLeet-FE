@@ -1,6 +1,8 @@
 import { User } from "@/types/user.type";
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { getItem } from "../localStorage";
+import { QuizFilter, Quiz } from "../../app/application/quiz/interface";
+import { Pagination } from "../../components/table";
 // import { EXPIRED_TOKEN } from "../const/errorCode";
 const api = axios.create({
   headers: {
@@ -68,11 +70,16 @@ api.interceptors.request.use(async (config) => {
 //   }
 // );
 
-const request = async (method = "GET", url: string, payload?: object) => {
+const request = async (
+  method: "GET" | "POST" | "PATCH" | "DELETE",
+  url: string,
+  payload?: object
+): Promise<AxiosResponse> => {
   const config: AxiosRequestConfig = {
     method,
     url,
   };
+
   if (method === "GET") {
     config.params = payload;
   } else {
@@ -81,7 +88,6 @@ const request = async (method = "GET", url: string, payload?: object) => {
 
   return api(config);
 };
-
 const register = async ({ email, full_name, gender, password }: User) => {
   return request("POST", "/auth/register", {
     email,
@@ -111,6 +117,21 @@ const getCurrentUser = async () => {
   return request("GET", "/auth/me");
 };
 
+const getQuizzes = async (filter: QuizFilter) => {
+  try {
+    const response = (await request("GET", "/quizz", filter)) as AxiosResponse<{
+      data: {
+        items: Quiz[];
+        pagination: Pagination;
+      };
+    }>;
+    return response.data.data;
+  } catch (error) {
+    console.error("Failed to fetch quizzes:", error);
+    throw error;
+  }
+};
+
 export default {
   register,
   login,
@@ -118,4 +139,5 @@ export default {
   verifyEmail,
   getCurrentUser,
   refreshToken,
+  getQuizzes,
 };
