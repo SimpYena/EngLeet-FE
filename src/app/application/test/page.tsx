@@ -22,7 +22,7 @@ const quizCards: QuizCard[] = Array(6).fill({
 export default function Test() {
   return (
     <div className="container mx-auto p-6 space-y-6">
-      <div className=" mx-auto space-y-6 p-6">
+      <div className="mx-auto space-y-6 p-6">
         <h1 className="text-4xl font-bold">Practice Test</h1>
 
         <div className="flex items-center justify-between ">
@@ -50,14 +50,6 @@ export default function Test() {
             <QuizCard key={index} {...card} />
           ))}
         </div>
-
-        <QuizCard
-          title="something"
-          description="phuc dep trai"
-          rating={5}
-          subtitle="5"
-          key={1}
-        />
       </div>
     </div>
   );

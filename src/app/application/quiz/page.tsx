@@ -26,6 +26,7 @@ import {
 import api from "../../../utils/apis/user.service";
 import useTotalPagesStore from "@/stores/quizTotal";
 import { useRouter } from "next/navigation";
+import { pagination } from "@nextui-org/react";
 
 export default function QuizManagement() {
   const DIFFICULTIES = ["Easy", "Medium", "Hard"];
@@ -99,6 +100,12 @@ export default function QuizManagement() {
 
     fetchQuizzes();
   }, [filters, setTotalPages]);
+
+  const pickRandomQuiz = () => {
+    router.push(
+      `/application/quiz/${Math.floor(Math.random() * pagination.total)}`
+    );
+  };
 
   const columns = [
     {
@@ -251,7 +258,11 @@ export default function QuizManagement() {
           >
             Hủy thay đổi
           </Button>
-          <Button size={"lg"} variant="outline">
+          <Button
+            size={"lg"}
+            variant="outline"
+            onClick={() => pickRandomQuiz()}
+          >
             Pick random quizz
           </Button>
           <Button size={"lg"}>
