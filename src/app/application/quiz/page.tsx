@@ -40,8 +40,8 @@ export default function QuizManagement() {
   });
   const [limit, setLimit] = useState(pagination.limit);
   const [offset, setOffset] = useState(0);
-  const [difficulties, setDifficulties] = useState<string>("Difficulty");
-  const [topics, setTopics] = useState<string>("Topic");
+  const [difficulties, setDifficulties] = useState<string>(null);
+  const [topics, setTopics] = useState<string>(null);
 
   const [keyword, setKeyword] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -166,7 +166,7 @@ export default function QuizManagement() {
             onValueChange={(value) => updateFilter("difficulties", [value])}
           >
             <SelectTrigger>
-              <SelectValue placeholder={difficulties} />
+              <SelectValue placeholder={"Difficulty"} />
             </SelectTrigger>
             <SelectContent>
               {DIFFICULTIES.map((diff) => (
@@ -184,7 +184,7 @@ export default function QuizManagement() {
             }}
           >
             <SelectTrigger>
-              <SelectValue placeholder={topics} />
+              <SelectValue placeholder={"Topic"} />
             </SelectTrigger>
             <SelectContent>
               {TOPICS.map((topic) => (

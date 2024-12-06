@@ -8,7 +8,7 @@ import {
   NavbarItem,
 } from "@nextui-org/react";
 import Image from "next/image";
-import banner from "../../public/images/banner.png";
+import banner from "../../../src/app/public/images/banner.png";
 
 import { useEffect } from "react";
 

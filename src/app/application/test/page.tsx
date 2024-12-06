@@ -50,6 +50,14 @@ export default function Test() {
             <QuizCard key={index} {...card} />
           ))}
         </div>
+
+        <QuizCard
+          title="something"
+          description="phuc dep trai"
+          rating={5}
+          subtitle="5"
+          key={1}
+        />
       </div>
     </div>
   );
