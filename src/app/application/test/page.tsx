@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/application/ui/button";
 import { ClipboardList, Filter, SortDesc } from "lucide-react";
 import { QuizCard } from "./quizCard";
 

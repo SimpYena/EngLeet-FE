@@ -1,7 +1,12 @@
 import { User } from "@/types/user.type";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { getItem } from "../localStorage";
-import { QuizFilter, Quiz } from "../../app/application/quiz/interface";
+import {
+  QuizFilter,
+  Quiz,
+  Transcript,
+  QuizAttempt,
+} from "../../app/application/quiz/interface";
 import { Pagination } from "../../components/table";
 // import { EXPIRED_TOKEN } from "../const/errorCode";
 const api = axios.create({
@@ -23,10 +28,13 @@ const getToken = () => {
 
 // Attach access token to every request
 api.interceptors.request.use(async (config) => {
-  const token = getToken();
-  if (!token) {
-    return config;
-  }
+  // const token = getToken();
+  // if (!token) {
+  //   return config;
+  // }
+
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NUb2tlbklkIjo2MCwidXNlcklkIjo5LCJpYXQiOjE3MzM1MDk1MTQsImV4cCI6MTczMzUxMzExNH0.hQlHxNBOBuIfCCAUeHHXQmaJ_FOkIBqwSfkqt311sq8";
 
   config.headers.Authorization = `Bearer ${token}`;
   return config;
@@ -132,6 +140,32 @@ const getQuizzes = async (filter: QuizFilter) => {
   }
 };
 
+const getQuizDetail = async (id: string) => {
+  try {
+    const response = (await request("GET", `/quizz/${id}`)) as AxiosResponse<{
+      data: Transcript;
+    }>;
+    return response.data.data;
+  } catch (error) {
+    console.error("Failed to fetch quiz detail:", error);
+    throw error;
+  }
+};
+
+const submitAnswer = async (id: number, answer: string) => {
+  try {
+    const response = (await request("POST", `/quizz/${id}`, {
+      answer,
+    })) as AxiosResponse<{
+      data: QuizAttempt;
+    }>;
+    return response.data.data;
+  } catch (error) {
+    console.error("Failed to submit answer:", error);
+    throw error;
+  }
+};
+
 export default {
   register,
   login,
@@ -140,4 +174,6 @@ export default {
   getCurrentUser,
   refreshToken,
   getQuizzes,
+  getQuizDetail,
+  submitAnswer,
 };

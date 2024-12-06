@@ -1,16 +1,14 @@
 "use client";
 import { DataTable } from "@/components/table";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/app/application/ui/button";
+import { Input } from "@/app/application/ui/input";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/app/application/ui/select";
 import {
   CheckCircle2,
   ChevronDown,
@@ -26,11 +24,23 @@ import {
   QuizFilter,
 } from "./interface";
 import api from "../../../utils/apis/user.service";
+import useTotalPagesStore from "@/stores/quizTotal";
+import { useRouter } from "next/navigation";
 
 export default function QuizManagement() {
-  const DIFFICULTIES = ["Easy", "Medium", "Hard", "Expert"];
-  const TOPICS = ["School", "Environment", "Culture", "Life", "Family"];
-  const TYPE = ["Reading", "Writing", "Listening", "Speaking"];
+  const DIFFICULTIES = ["Easy", "Medium", "Hard"];
+  const TOPICS = [
+    "School",
+    "Environment",
+    "Culture",
+    "Life",
+    "Family",
+    "Technology",
+    "History",
+    "Work",
+    "Science",
+  ];
+  const TYPE = ["Reading", "Listening"];
 
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [pagination, setPagination] = useState({
@@ -42,16 +52,17 @@ export default function QuizManagement() {
   const [offset, setOffset] = useState(0);
   const [difficulties, setDifficulties] = useState<string>(null);
   const [topics, setTopics] = useState<string>(null);
-
+  const [type, setType] = useState<string>(null);
   const [keyword, setKeyword] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
-
+  const router = useRouter();
   const [filters, setFilters] = useState<QuizFilter>({
     limit: limit,
-    offset: offset,
-    difficulties: difficulties,
-    topics: topics,
-    keyword: keyword,
+    offset,
+    difficulties,
+    topics,
+    keyword,
+    skills: type,
   });
 
   const updateFilter = (key: keyof typeof filters, value: any) => {
@@ -60,6 +71,8 @@ export default function QuizManagement() {
       [key]: value,
     }));
   };
+
+  const setTotalPages = useTotalPagesStore((state) => state.setTotalPages);
 
   useEffect(() => {
     async function fetchQuizzes() {
@@ -73,6 +86,10 @@ export default function QuizManagement() {
           limit: response.pagination.limit,
           offset: response.pagination.offset,
         });
+
+        if (response.pagination.total !== pagination.total) {
+          setTotalPages(response.pagination.total);
+        }
       } catch (error) {
         console.error("Failed to fetch quizzes:", error);
       } finally {
@@ -81,7 +98,7 @@ export default function QuizManagement() {
     }
 
     fetchQuizzes();
-  }, [filters]);
+  }, [filters, setTotalPages]);
 
   const columns = [
     {
@@ -122,6 +139,19 @@ export default function QuizManagement() {
         </span>
       ),
     },
+    {
+      header: "Action",
+      accessor: (row: Quiz) => (
+        <Button
+          onClick={() => {
+            router.push(`/application/quiz/${row.id}`);
+          }}
+          variant="default"
+        >
+          Start
+        </Button>
+      ),
+    },
   ];
 
   const handlePaginationChange = (e: { limit: number; offset: number }) => {
@@ -138,9 +168,10 @@ export default function QuizManagement() {
       difficulties: undefined,
       topics: undefined,
       keyword: undefined,
-      type: undefined,
+      skills: undefined,
     });
 
+    setType("Type");
     setDifficulties("Difficulty");
     setTopics("Topic");
   };
@@ -195,7 +226,7 @@ export default function QuizManagement() {
             </SelectContent>
           </Select>
 
-          <Select onValueChange={(value) => updateFilter("type", [value])}>
+          <Select onValueChange={(value) => updateFilter("skills", [value])}>
             <SelectTrigger>
               <SelectValue placeholder="Type" />
             </SelectTrigger>

@@ -5,7 +5,7 @@ import {
   TableCell,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/app/application/ui/table";
 import { Button, Spinner } from "@nextui-org/react";
 
 type Column<T> = {

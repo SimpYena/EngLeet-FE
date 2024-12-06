@@ -8,13 +8,29 @@ export interface Quiz {
   acceptance: number;
 }
 
+export interface Transcript {
+  id: number;
+  acceptance: number;
+  context: string;
+  difficulty: string;
+  topic: string;
+  answer: string[];
+  score: number;
+  audio_link: string | null;
+}
+
+export interface QuizAttempt {
+  status: "Correct" | "Incorrect";
+  score: number;
+  attempt: number;
+}
 export interface QuizFilter {
   limit?: number;
   offset?: number;
   difficulties?: string[] | string;
   topics?: string[] | string;
   keyword?: string;
-  type?: string;
+  skills?: string;
 }
 
 export enum QuizDifficulty {
