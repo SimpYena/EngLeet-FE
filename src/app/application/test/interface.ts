@@ -13,3 +13,11 @@ export interface TestFilter {
   keyword?: string;
   categories?: string;
 }
+export interface TestDetails {
+    title: string;
+    duration: string;
+    skill: string;
+    difficulty: string;
+    description: string;
+    image_url: string;
+}

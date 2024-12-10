@@ -1,15 +1,45 @@
+"use client"
 import { FileText } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { Input } from "@nextui-org/react";
+import { useEffect, useState } from "react";
+import api from "../../../../utils/apis/user.service";
+import { usePathname } from "next/navigation";
+import { TestDetails } from "../interface";
 export default function AssessmentTest() {
+  const extractIdFromPath = (path: string): string | null => {
+    const match = path.match(/\/application\/test\/(\d+)/);
+    return match ? match[1] : null;
+  };
+  const [testDetails, setTestDetails] = useState<TestDetails | null>(null);
+  const DIFFICULTIES = ["Easy", "Medium", "Hard"];
+  const CATEGORIES = ["TOEIC", "IELTS"];
+  const pathName = usePathname();
+  const id = extractIdFromPath(pathName) as string | null;
+  const [shouldError, setShouldError] = useState(false);
+
+  const [difficulties, setDifficulties] = useState<string>(null);
+  useEffect(() => {
+    const fetchTestDetails = async () => {
+      try {
+        const response = await api.getTestDetail(id as string);
+        setTestDetails(response);
+      } catch (error) {
+        console.error(error);
+        setShouldError(true);
+      }
+    };
+    fetchTestDetails();
+  }, [id]);
+
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className="mx-auto space-y-6 p-6 h-4/5">
         <div className="">
-          <h1 className="text-4xl font-bold">Test your skills!</h1>
+          <h1 className="text-4xl font-bold">Practice English Test</h1>
           <p className="text-muted-foreground mt-2">
-            Làm bài test dưới đây để kiểm tra trình độ của bạn!
+            Do the test below to enhance your English
           </p>
         </div>
 
@@ -17,9 +47,19 @@ export default function AssessmentTest() {
           <div className="flex justify-center gap-80 w-full">
             <div className="flex justify-center items-center">
               <div className="w-64 h-64 rounded-lg flex flex-col justify-center  gap-10">
-                <div className="flex justify-center w-full">
-                  {" "}
-                  <FileText className="w-32 h-32 text-purple-600" />
+              <div className="w-64 h-64 rounded-lg flex flex-col justify-center items-center gap-10">
+                  <img
+                    src={testDetails?.image_url}
+                    alt="Test Preview"
+                    style={{
+                      width: '60%', // Maintain responsive resizing for parent container
+                      height: '100%', // Maintain responsive resizing for parent container
+                      maxWidth: '100%',
+                      maxHeight: '100%',
+                      objectFit: 'cover',
+                    }}
+                    className="rounded-lg"
+                  />
                 </div>
                 <Button
                   variant={"default"}
@@ -30,11 +70,11 @@ export default function AssessmentTest() {
                 </Button>
               </div>
             </div>
-
+    
             <div className="space-y-12 flex justify-center items-center">
               <div>
                 <h2 className="text-4xl font-semibold mb-12">
-                  Assessment test
+                  {testDetails?.title}
                 </h2>
                 <dl className="grid gap-6 text-lg">
                   <div className="grid grid-cols-2 gap-2">
@@ -43,15 +83,15 @@ export default function AssessmentTest() {
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <dt className="font-medium">Duration:</dt>
-                    <dd>30 minutes</dd>
+                    <dd>{testDetails?.duration}</dd>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <dt className="font-medium">Topic covered:</dt>
-                    <dd>Listening, Reading</dd>
+                    <dd>{testDetails?.skill}</dd>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <dt className="font-medium">Difficulty level:</dt>
-                    <dd>All levels</dd>
+                    <dd>{testDetails?.difficulty}</dd>
                   </div>
                 </dl>
               </div>
