@@ -8,6 +8,7 @@ import {
   QuizAttempt,
 } from "../../app/application/quiz/interface";
 import { Pagination } from "../../components/table";
+import { TestFilter, Tests } from "@/app/application/test/interface";
 // import { EXPIRED_TOKEN } from "../const/errorCode";
 const api = axios.create({
   headers: {
@@ -166,6 +167,21 @@ const submitAnswer = async (id: number, answer: string) => {
   }
 };
 
+const getTest = async (filter: TestFilter) => {
+  try {
+    const response = (await request("GET", "/test", filter)) as AxiosResponse<{
+      data: {
+        items: Tests[];
+        pagination: Pagination;
+      };
+    }>;
+    return response.data.data;
+  } catch (error) {
+    console.error("Failed to fetch tests:", error);
+    throw error;
+  }
+}
+
 export default {
   register,
   login,
@@ -176,4 +192,5 @@ export default {
   getQuizzes,
   getQuizDetail,
   submitAnswer,
+  getTest
 };

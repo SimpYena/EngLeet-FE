@@ -90,6 +90,7 @@ export default function QuizManagement() {
 
         if (response.pagination.total !== pagination.total) {
           setTotalPages(response.pagination.total);
+          
         }
       } catch (error) {
         console.error("Failed to fetch quizzes:", error);
