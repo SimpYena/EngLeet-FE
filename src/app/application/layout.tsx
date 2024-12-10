@@ -2,25 +2,27 @@
 import Sidebar from "@/components/sidebar";
 import userService from "@/utils/services/user.service";
 import { useEffect } from "react";
+import { useUser } from "@/provider/AuthContent";
 
 export default function ApplicationLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  useEffect(() => {
-    userService
-      .loadCurrentUser()
-      .then((response) => {
-        console.log(response);
-        // if (!user) {
-        //   window.location.href = '/auth/login';
-        // }
-      })
-      .catch(() => {
-        // window.location.href = '/auth/login';
-      });
-  }, []);
+  const user = useUser();
+  // useEffect(() => {
+  //   userService
+  //     .loadCurrentUser()
+  //     .then((response) => {
+  //       console.log(response);
+  //       // if (!user) {
+  //       //   window.location.href = '/auth/login';
+  //       // }
+  //     })
+  //     .catch(() => {
+  //       // window.location.href = '/auth/login';
+  //     });
+  // }, []);
 
   // useEffect(() => {
   //   if (pathName === '/application') {
@@ -28,7 +30,7 @@ export default function ApplicationLayout({
   //   }
   // }, [pathName, router]);
 
-  return (
+  return user ? (
     <div className="flex h-screen bg-gray-50">
       <aside className=" bg-white border-r">
         <div className="space-y-4 flex flex-col">
@@ -37,5 +39,5 @@ export default function ApplicationLayout({
       </aside>
       {children}
     </div>
-  );
+  ): <div>Loading.....</div>;
 }

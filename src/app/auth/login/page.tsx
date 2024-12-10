@@ -6,9 +6,25 @@ import UserService from "@/utils/services/user.service";
 import toast from "@/components/toast";
 
 import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function Main() {
   const searchParams = useSearchParams();
+
+  // const removeSearchParam = (param: string) => {
+  //   // Convert searchParams to a plain object
+  //   const params = new URLSearchParams(searchParams.toString());
+
+  //   params.delete(param); // Remove the specific parameter
+
+  //   // Update the URL
+  //   console.log(params.toString());
+    
+  //   const newUrl = params.toString() ? `?${params.toString()}` : "";
+  //   router.replace(newUrl);
+  // };
+
+  // const router = useRouter();
 
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const [formData, setFormData] = useState({
@@ -24,12 +40,15 @@ export default function Main() {
     const query = Object.fromEntries(searchParams.entries());
     if (query.token) {
       UserService.verifyEmail(query.token)
-        .then(() => {
-          toast.success("Email verified successfully, please login");
-        })
-        .catch(() => {
-          toast.error("Email verification failed");
-        });
+      .then(() => {
+        toast.success("Email verified successfully, please login");
+      })
+      .catch(() => {
+        toast.error("Email verification failed");
+      })
+      // .finally(() => {
+        // removeSearchParam("token");
+      // });
     }
   }, []);
 
@@ -73,7 +92,7 @@ export default function Main() {
       password: "",
     });
     // Handle successful form submission here
-    await UserService.login(formData);
+    // await UserService.login(formData);
     const result = await UserService.login(formData);
 
     if (result.errors) {
@@ -92,7 +111,7 @@ export default function Main() {
       return;
     }
 
-    window.location.href = "/auth/login";
+    window.location.href = "/application";
   };
 
   return (
@@ -153,7 +172,7 @@ export default function Main() {
             <Link href="#" color="primary">
               Privacy Policy
             </Link>{" "}
-            và{" "}
+            and{" "}
             <Link href="#" color="primary">
               Terms of Service
             </Link>
