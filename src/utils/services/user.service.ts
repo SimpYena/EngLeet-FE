@@ -5,8 +5,20 @@ import { ErrorInfo } from "@/types/error.type";
 // import UserStore from "@/stores/user.store";
 import useUserStore from "@/stores/user.store";
 import { setItemIntoStorage } from "../localStorage";
+import moment from "moment";
+// import nookies from "nookies";
+import { parseCookies, setCookie, destroyCookie } from 'nookies'
 
-// const useUserStore = (selector) => useStore(UserStore, selector);
+const setToken = ({ access_token, refresh_token }) => {
+  setCookie(null, "el-access-token", access_token, {
+    maxAge: 86400,
+    path: "/"
+  });
+  setCookie(null, "el-refresh-token", refresh_token, {
+    maxAge: 86400,
+    path: "/"
+  });
+};
 
 const register = async (payload: User) => {
   return UserApi.register(payload)
@@ -18,20 +30,21 @@ const register = async (payload: User) => {
     });
 };
 
-const login = async (payload: User) => {
+const login = async (payload: User): Promise<User> => {
   const setUser = useUserStore.getState().setUser;
   return UserApi.login(payload)
-    .then(({ data }) => {
-      setItemIntoStorage("access_token", data.data.access_token);
-      setItemIntoStorage("refresh_token", data.data.refresh_token);
-      return UserApi.getCurrentUser().then(({ data }) => {
-        console.log(JSON.stringify(data.data));
-        setItemIntoStorage("user", JSON.stringify(data.data));
-        setUser(data.data);
-        return data.data as User;
+    .then((credential) => {
+      setToken(credential);
+
+      return UserApi.getCurrentUser().then((user) => {
+        setItemIntoStorage("user", JSON.stringify(user));
+        setUser(user);
+        return user;
       });
     })
-    .catch(({ response }) => {
+    .catch((response) => {
+      console.log(response);
+      
       return response.data.error;
     });
 };
@@ -42,45 +55,30 @@ const verifyEmail = async (token: string) => {
       return response.data;
     })
     .catch(({ errors }: ErrorInfo) => {
-      return { errors };
+      throw errors;
     });
 };
 
 const refreshToken = async () => {
   return UserApi.refreshToken()
-    .then(({ data }) => {
-      setItemIntoStorage("access_token", data.data.access_token);
-      setItemIntoStorage("refresh_token", data.data.refresh_token);
+    .then((credential) => {
+      setItemIntoStorage("access_token", credential.access_token);
+      setItemIntoStorage("refresh_token", credential.refresh_token);
     })
-    .catch(({ response }) => {
-      return response.data.error;
+    .catch((error) => {
+      return error;
     });
 };
 
 const loadCurrentUser = async () => {
-  setItemIntoStorage("access_token", "");
-  const token = await refreshToken();
-
-  if (!token) {
-    setItemIntoStorage("refresh_token", "");
-    setItemIntoStorage("user", "");
-  }
-
-  console.log(token);
-  return null;
-
-  // return UserApi.refreshToken()
-  // .then((response) => {
-  //   console.log(response);
-  //   setItem('access_token', response.data.data.access_token);
-  //   return UserApi.getCurrentUser()
-  //   .then((response) => {
-  //     return response.data.data as User;
-  //   })
-  // });
+    return UserApi.getCurrentUser()
+    .then((user) => {
+      return user;
+    });
 };
 
 export default {
+  setToken,
   register,
   login,
   verifyEmail,

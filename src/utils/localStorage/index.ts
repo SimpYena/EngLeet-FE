@@ -24,3 +24,11 @@ export const getItem = (key: string): any | null => {
     return null;
   }
 };
+
+export const removeItem = (key: string): void => {
+  try {
+    localStorage.removeItem(key);
+  } catch (error) {
+    console.error(`Error removing item from localStorage: ${error}`);
+  }
+}

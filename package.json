@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 8080",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 8080",
     "lint": "next lint"
   },
   "dependencies": {
@@ -25,7 +25,9 @@
     "framer-motion": "11",
     "lodash": "^4.17.21",
     "lucide-react": "^0.462.0",
+    "moment": "^2.30.1",
     "next": "14.2.15",
+    "nookies": "^2.5.2",
     "react": "^18",
     "react-calendar-heatmap": "^1.9.0",
     "react-dom": "^18",
