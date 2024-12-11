@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import {
   Card,
@@ -32,6 +33,7 @@ const TranscriptUI = () => {
     const fetchTranscript = async () => {
       try {
         const response = await api.getQuizDetail(id as string);
+        console.log(response);
         setTranscript(response);
       } catch (error) {
         console.error(error);
@@ -59,12 +61,27 @@ const TranscriptUI = () => {
               </CardContent>
             </Card>
           ) : (
-            <Question
-              args={transcript}
-              total={totalPages}
-              showComment={setShowComment}
-              page={id}
-            />
+            <>
+              {transcript?.audio_link ? (
+                <Card className="mb-4">
+                  <CardHeader>
+                    <CardTitle>Listening Quizz</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <audio controls>
+                      <source src={transcript.audio_link} type="audio/mpeg" />
+                      Your browser does not support the audio element.
+                    </audio>
+                  </CardContent>
+                </Card>
+              ) : null}
+              <Question
+                args={transcript}
+                total={totalPages}
+                showComment={setShowComment}
+                page={id}
+              />
+            </>
           )}
         </div>
         <Separator orientation="vertical" />

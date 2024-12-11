@@ -6,6 +6,7 @@ export interface Quiz {
   topic: string;
   type: string;
   acceptance: number;
+  status: number;
 }
 
 export interface Transcript {
@@ -31,6 +32,7 @@ export interface QuizFilter {
   topics?: string[] | string;
   keyword?: string;
   skills?: string;
+  status?: number;
 }
 
 export enum QuizDifficulty {

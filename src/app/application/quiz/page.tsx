@@ -42,6 +42,7 @@ export default function QuizManagement() {
     "Science",
   ];
   const TYPE = ["Reading", "Listening"];
+  const STATUS = ['0', '1'];
 
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [pagination, setPagination] = useState({
@@ -55,6 +56,7 @@ export default function QuizManagement() {
   const [topics, setTopics] = useState<string>(null);
   const [type, setType] = useState<string>(null);
   const [keyword, setKeyword] = useState<string>();
+  const [status, setStatus] = useState<string>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
   const [filters, setFilters] = useState<QuizFilter>({
@@ -64,6 +66,7 @@ export default function QuizManagement() {
     topics,
     keyword,
     skills: type,
+    status
   });
 
   const updateFilter = (key: keyof typeof filters, value: any) => {
@@ -87,7 +90,8 @@ export default function QuizManagement() {
           limit: response.pagination.limit,
           offset: response.pagination.offset,
         });
-
+        console.log(response.items);
+        
         if (response.pagination.total !== pagination.total) {
           setTotalPages(response.pagination.total);
           
@@ -109,6 +113,13 @@ export default function QuizManagement() {
   };
 
   const columns = [
+    {
+      header: "Status",
+      accessor: (row: Quiz) =>
+        row.status == 1 ? (
+          <CheckCircle2 className="h-4 w-4 text-green-500" />
+        ) : null,
+    },
     {
       header: "Title",
       accessor: (row: Quiz) => row.title,
