@@ -61,6 +61,9 @@ const getTest = async (filter: TestFilter) => {
 const getTestDetail = async (id: string) => {
   return axiosInterceptorInstance.get(`/test/${id}`);
 };
+const getReadingTestDetail = async (id: string) => {
+  return axiosInterceptorInstance.get(`/test/${id}/reading`);
+}
 
 export default {
   register,
@@ -73,5 +76,6 @@ export default {
   getQuizDetail,
   submitAnswer,
   getTest,
-  getTestDetail
+  getTestDetail,
+  getReadingTestDetail
 };

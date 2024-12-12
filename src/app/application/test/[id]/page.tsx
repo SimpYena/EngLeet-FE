@@ -7,19 +7,17 @@ import { useEffect, useState } from "react";
 import api from "../../../../utils/apis/user.service";
 import { usePathname } from "next/navigation";
 import { TestDetails } from "../interface";
+import { useRouter } from "next/navigation";
 export default function AssessmentTest() {
   const extractIdFromPath = (path: string): string | null => {
     const match = path.match(/\/application\/test\/(\d+)/);
     return match ? match[1] : null;
   };
   const [testDetails, setTestDetails] = useState<TestDetails | null>(null);
-  const DIFFICULTIES = ["Easy", "Medium", "Hard"];
-  const CATEGORIES = ["TOEIC", "IELTS"];
   const pathName = usePathname();
   const id = extractIdFromPath(pathName) as string | null;
   const [shouldError, setShouldError] = useState(false);
-
-  const [difficulties, setDifficulties] = useState<string>(null);
+  const router = useRouter()
   useEffect(() => {
     const fetchTestDetails = async () => {
       try {
@@ -32,6 +30,11 @@ export default function AssessmentTest() {
     };
     fetchTestDetails();
   }, [id]);
+  const doTheTest = () => {
+    router.push(
+      `${id}/detail`
+    );
+  };
 
   return (
     <div className="container mx-auto p-6 space-y-6">
@@ -65,6 +68,7 @@ export default function AssessmentTest() {
                   variant={"default"}
                   size={"lg"}
                   className="bg-purple-600 hover:bg-purple-700 py-4 px-8"
+                  onClick={doTheTest}
                 >
                   Let&apos;s do it!
                 </Button>
@@ -73,7 +77,7 @@ export default function AssessmentTest() {
     
             <div className="space-y-12 flex justify-center items-center">
               <div>
-                <h2 className="text-4xl font-semibold mb-12">
+                <h2 className="text-3xl font-semibold mb-12">
                   {testDetails?.title}
                 </h2>
                 <dl className="grid gap-6 text-lg">

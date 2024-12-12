@@ -21,3 +21,24 @@ export interface TestDetails {
     description: string;
     image_url: string;
 }
+export interface Question {
+  id: number;
+  question: string;
+  answer: string[];
+}
+
+export interface SectionContext {
+  id: number;
+  passage: string;
+  question: Question[];
+}
+
+export interface Item {
+  sectionContext: SectionContext[];
+}
+
+export interface APIResponse {
+  data: {
+    items: Item[];
+  };
+}
