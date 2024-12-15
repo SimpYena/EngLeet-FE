@@ -1,56 +1,36 @@
 "use client";
 import { Input, Button, Link } from "@nextui-org/react";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, Suspense, useEffect, useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import UserService from "@/utils/services/user.service";
 import toast from "@/components/toast";
 
 import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
 
-export default function Main() {
+function LoginForm() {
   const searchParams = useSearchParams();
-
-  // const removeSearchParam = (param: string) => {
-  //   // Convert searchParams to a plain object
-  //   const params = new URLSearchParams(searchParams.toString());
-
-  //   params.delete(param); // Remove the specific parameter
-
-  //   // Update the URL
-  //   console.log(params.toString());
-    
-  //   const newUrl = params.toString() ? `?${params.toString()}` : "";
-  //   router.replace(newUrl);
-  // };
-
-  // const router = useRouter();
-
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
-    password: "",
+    password: ""
   });
   const [errors, setErrors] = useState({
     email: "",
-    password: "",
+    password: ""
   });
 
   useEffect(() => {
     const query = Object.fromEntries(searchParams.entries());
     if (query.token) {
       UserService.verifyEmail(query.token)
-      .then(() => {
-        toast.success("Email verified successfully, please login");
-      })
-      .catch(() => {
-        toast.error("Email verification failed");
-      })
-      // .finally(() => {
-        // removeSearchParam("token");
-      // });
+        .then(() => {
+          toast.success("Email verified successfully, please login");
+        })
+        .catch(() => {
+          toast.error("Email verification failed");
+        });
     }
-  }, []);
+  }, [searchParams]);
 
   const togglePasswordVisible = () => setPasswordVisible(!isPasswordVisible);
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -60,7 +40,7 @@ export default function Main() {
   const validateForm = () => {
     const newErrors = {
       email: "",
-      password: "",
+      password: ""
     };
     if (!formData.email) {
       newErrors.email = "Email is required.";
@@ -89,7 +69,7 @@ export default function Main() {
 
     setErrors({
       email: "",
-      password: "",
+      password: ""
     });
     // Handle successful form submission here
     // await UserService.login(formData);
@@ -104,7 +84,7 @@ export default function Main() {
         },
         {
           email: "",
-          password: "",
+          password: ""
         }
       );
       setErrors(parsedErrors);
@@ -180,5 +160,13 @@ export default function Main() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Main() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginForm />
+    </Suspense>
   );
 }

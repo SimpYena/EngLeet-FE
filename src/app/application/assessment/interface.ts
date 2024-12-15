@@ -5,7 +5,6 @@ export interface Tests {
   difficulty: string;
   acceptance: number;
   image_url: string;
-  type?: string;
 }
 export interface TestFilter {
   limit?: number;
@@ -15,13 +14,12 @@ export interface TestFilter {
   categories?: string;
 }
 export interface TestDetails {
-    title?: string;
-    duration?: string;
-    skill?: string;
-    difficulty?: string;
-    description?: string;
-    image_url?: string;
-    type?: string;
+    title: string;
+    duration: string;
+    skill: string;
+    difficulty: string;
+    description: string;
+    image_url: string;
 }
 export interface Question {
   id: number;

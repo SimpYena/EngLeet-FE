@@ -28,11 +28,11 @@ export interface QuizAttempt {
 export interface QuizFilter {
   limit?: number;
   offset?: number;
-  difficulties?: string[] | string;
-  topics?: string[] | string;
+  difficulties?: string[] | string
+  topics?: string[] | string
   keyword?: string;
-  skills?: string;
-  status?: number;
+  skills?: string[] | string;
+  status?: string;
 }
 
 export enum QuizDifficulty {

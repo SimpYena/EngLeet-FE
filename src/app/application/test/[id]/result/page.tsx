@@ -1,10 +1,20 @@
-import { Button } from "@/app/application/ui/button";
+"use client";
+
+// import { Button } from "@/app/application/ui/button";
 import Image from "next/image";
-import image from "../../../../../public/images/illustration.png";
-import logo from "../../../../../public/images//logo.png";
-export default function QuizCompletion() {
+import image from "@/app/public/images/illustration.png";
+import logo from "@/app/public/images/logo.png";
+import { useRouter } from "next/navigation";
+import { Button } from "@nextui-org/react";
+
+export default function QuizCompletion({ params }: { params: { id: string } }) {
+  const router = useRouter();
+  const { id } = params;
+  const viewResult = () => {
+    router.push(`/application/test/${id}/detail`);
+  }
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="container mx-auto p-6 space-y-6 bg-white overflow-y-auto h-screen">
       <div className="mx-auto space-y-6 p-6">
         <div className="min-h-screen bg-white">
           {/* Header */}
@@ -24,33 +34,14 @@ export default function QuizCompletion() {
                 </div>
               </div>
             </div>
-
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <div className="w-5 h-5">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="w-full h-full"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <polyline points="12 6 12 12 16 14" />
-                </svg>
-              </div>
-              <span className="font-mono">00:00:00</span>
-            </div>
           </header>
 
           <main className="max-w-4xl mx-auto px-4 py-12 text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              Cảm Ơn Vì Đã Tham Gia
+              Thank you for taking the test!
             </h1>
             <h2 className="text-xl md:text-2xl mb-12">
-              Hệ Thống Đang Chấm Điểm!
+              You have successfully completed the test
             </h2>
 
             <div className="relative w-full max-w-md mx-auto mb-8">
@@ -64,11 +55,11 @@ export default function QuizCompletion() {
             </div>
 
             <p className="text-muted-foreground mb-8">
-              Bấm vào nút &quot;Xem điểm&quot; để có thể xem lại kết quả!
+              Press the button below to view your results
             </p>
 
-            <Button className="bg-[#5D4E7B] hover:bg-[#4A3D62] text-white px-8 py-2 rounded-full">
-              Xem điểm
+            <Button variant="solid" color="primary" onPress={viewResult}>
+              View Results
             </Button>
           </main>
         </div>

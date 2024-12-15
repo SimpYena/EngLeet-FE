@@ -4,8 +4,6 @@ import { ChangeEvent, useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import UserService from "@/utils/services/user.service";
 import toast from "@/components/toast";
-import { setItemIntoStorage } from "@/utils/localStorage";
-import { redirect } from "next/dist/server/api-utils";
 
 export default function Main() {
   const [isPasswordVisible, setPasswordVisible] = useState(false);
@@ -22,6 +20,7 @@ export default function Main() {
     full_name: "",
     password: "",
   });
+
   const togglePasswordVisible = () => setPasswordVisible(!isPasswordVisible);
   const toggleConfirmPasswordVisible = () =>
     setConfirmPasswordVisible(!isConfirmPasswordVisible);

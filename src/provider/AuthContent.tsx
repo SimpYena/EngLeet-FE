@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { parseCookies } from "nookies";
 import { getItem, removeItem, setItemIntoStorage } from "@/utils/localStorage";
 import userService from "@/utils/services/user.service";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const AuthContext = React.createContext<User>({} as User);
 
@@ -17,7 +17,7 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const router = useRouter();
   const [user, setUser] = useState<User>({} as User);
-
+  const pathName = usePathname();
   // Check if user session is invalid
   useEffect(() => {
     const cookies = parseCookies();
@@ -29,6 +29,10 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
       removeItem("user");
       nookies.destroy(null, accessTokenCookieName);
       nookies.destroy(null, refreshTokenCookieName);
+      if (pathName.includes("/auth")) {
+        return;
+      }
+
       router.push("/auth/login");
       return;
     }
