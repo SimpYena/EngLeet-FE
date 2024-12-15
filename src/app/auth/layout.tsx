@@ -11,16 +11,18 @@ import Image from "next/image";
 import banner from "../public/images/banner.png";
 
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
   useEffect(() => {
     const user = localStorage.getItem("user");
     if (user) {
-      window.location.href = "/application";
+      router.push("/application");
     }
   }, []);
 

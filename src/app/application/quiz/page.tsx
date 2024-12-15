@@ -2,109 +2,92 @@
 import { DataTable } from "@/components/table";
 import { Button } from "@/app/application/ui/button";
 import { Input } from "@/app/application/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/app/application/ui/select";
-import {
-  CheckCircle2,
-  ChevronDown,
-  FileBarChart,
-  Search,
-  Sparkles,
-} from "lucide-react";
+import { Select, SelectItem } from "@nextui-org/react";
+import { CheckCircle2, ChevronDown, FileBarChart, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   mapColorToDifficulty,
   Quiz,
   QuizDifficulty,
-  QuizFilter,
+  QuizFilter
 } from "./interface";
 import api from "../../../utils/apis/user.service";
 import useTotalPagesStore from "@/stores/quizTotal";
 import { useRouter } from "next/navigation";
-import { pagination } from "@nextui-org/react";
+import _ from "lodash";
 
 export default function QuizManagement() {
-  const DIFFICULTIES = ["Easy", "Medium", "Hard"];
-  const TOPICS = [
-    "School",
-    "Environment",
-    "Culture",
-    "Life",
-    "Family",
-    "Technology",
-    "History",
-    "Work",
-    "Science",
+  const DIFFICULTIES = [
+    { key: "Easy", label: "Easy" },
+    { key: "Medium", label: "Medium" },
+    { key: "Hard", label: "Hard" }
   ];
-  const TYPE = ["Reading", "Listening"];
-  const STATUS = ['0', '1'];
+  const TOPICS = [
+    { key: "School", label: "School" },
+    { key: "Environment", label: "Environment" },
+    { key: "Culture", label: "Culture" },
+    { key: "Life", label: "Life" },
+    { key: "Family", label: "Family" },
+    { key: "Technology", label: "Technology" },
+    { key: "History", label: "History" },
+    { key: "Work", label: "Work" },
+    { key: "Science", label: "Science" }
+  ];
+  const TYPE = [
+    { key: "Reading", label: "Reading" },
+    { key: "Listening", label: "Listening" }
+  ];
 
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [pagination, setPagination] = useState({
     total: 0,
     limit: 5,
-    offset: 0,
+    offset: 0
   });
-  const [limit, setLimit] = useState(pagination.limit);
-  const [offset, setOffset] = useState(0);
-  const [difficulties, setDifficulties] = useState<string>(null);
-  const [topics, setTopics] = useState<string>(null);
-  const [type, setType] = useState<string>(null);
-  const [keyword, setKeyword] = useState<string>();
-  const [status, setStatus] = useState<string>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
   const [filters, setFilters] = useState<QuizFilter>({
-    limit: limit,
-    offset,
-    difficulties,
-    topics,
-    keyword,
-    skills: type,
-    status
+    limit: 5,
+    offset: 0,
+    difficulties: undefined,
+    topics: undefined,
+    keyword: "",
+    skills: undefined
   });
 
-  const updateFilter = (key: keyof typeof filters, value: any) => {
+  const updateFilter = (key: string, value: string) => {
     setFilters((prev) => ({
       ...prev,
-      [key]: value,
+      [key]: value
     }));
   };
 
   const setTotalPages = useTotalPagesStore((state) => state.setTotalPages);
+  async function fetchQuizzes(limit = 5, offset = 0) {
+    setLoading(true);
+    try {
+      const f = _.omitBy({...filters, limit, offset}, value => value === undefined || value === null || value === '');
+      const response = await api.getQuizzes(f);
+      setQuizzes(response.items);
+      setPagination({
+        total: response.pagination.total,
+        limit: response.pagination.limit,
+        offset: response.pagination.offset
+      });
+
+      if (response.pagination.total !== pagination.total) {
+        setTotalPages(response.pagination.total);
+      }
+    } catch (error) {
+      console.error("Failed to fetch quizzes:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
-    async function fetchQuizzes() {
-      setLoading(true);
-      try {
-        const response = await api.getQuizzes(filters);
-
-        setQuizzes(response.items);
-        setPagination({
-          total: response.pagination.total,
-          limit: response.pagination.limit,
-          offset: response.pagination.offset,
-        });
-        console.log(response.items);
-        
-        if (response.pagination.total !== pagination.total) {
-          setTotalPages(response.pagination.total);
-          
-        }
-      } catch (error) {
-        console.error("Failed to fetch quizzes:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
     fetchQuizzes();
-  }, [filters, setTotalPages]);
+  }, []);
 
   const pickRandomQuiz = () => {
     router.push(
@@ -118,15 +101,15 @@ export default function QuizManagement() {
       accessor: (row: Quiz) =>
         row.status == 1 ? (
           <CheckCircle2 className="h-4 w-4 text-green-500" />
-        ) : null,
+        ) : null
     },
     {
       header: "Title",
-      accessor: (row: Quiz) => row.title,
+      accessor: (row: Quiz) => row.title
     },
     {
       header: "Acceptance",
-      accessor: (row: Quiz) => row.acceptance,
+      accessor: (row: Quiz) => row.acceptance
     },
     {
       header: "Difficulty",
@@ -138,7 +121,7 @@ export default function QuizManagement() {
         >
           {row.difficulty}
         </span>
-      ),
+      )
     },
     {
       header: "Topic",
@@ -147,7 +130,7 @@ export default function QuizManagement() {
           <FileBarChart className="h-4 w-4 mr-2" />
           {row.topic}
         </span>
-      ),
+      )
     },
     {
       header: "Type",
@@ -156,7 +139,7 @@ export default function QuizManagement() {
           <CheckCircle2 className="h-4 w-4 mr-2" />
           {row.type}
         </span>
-      ),
+      )
     },
     {
       header: "Action",
@@ -169,40 +152,38 @@ export default function QuizManagement() {
         >
           Start
         </Button>
-      ),
-    },
+      )
+    }
   ];
 
-  const handlePaginationChange = (e: { limit: number; offset: number }) => {
+  const handlePaginationChange = async (e: { limit: number; offset: number }) => {
     setFilters((prev) => ({
       ...prev,
       limit: e.limit,
-      offset: e.offset,
+      offset: e.offset
     }));
+
+    await fetchQuizzes(e.limit, e.offset);
   };
 
   const resetFilter = () => {
-    setFilters({
-      ...filters,
-      difficulties: undefined,
-      topics: undefined,
-      keyword: undefined,
-      skills: undefined,
-    });
-
-    setType("Type");
-    setDifficulties("Difficulty");
-    setTopics("Topic");
+    setFilters((prev) => ({
+      ...prev,
+      difficulties: "",
+      topics: "",
+      keyword: "",
+      skills: ""
+    }));
   };
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="container mx-auto p-6 space-y-6 bg-white overflow-y-auto h-screen">
       <div className=" mx-auto space-y-6 p-6">
         <h1 className="text-4xl font-bold">Quizz</h1>
         <div className="flex gap-4">
           <Input
             placeholder="Search"
-            value={keyword}
+            value={filters.keyword}
             onChange={(e) => updateFilter("keyword", e.target.value)}
             className="flex-grow w-4/5 h-12"
           />
@@ -213,62 +194,45 @@ export default function QuizManagement() {
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           <Select
-            onValueChange={(value) => updateFilter("difficulties", [value])}
+            aria-label="difficulties"
+            placeholder="Select difficulties"
+            value={filters.difficulties}
+            onChange={(e) => updateFilter("difficulties", e.target.value)}
           >
-            <SelectTrigger>
-              <SelectValue placeholder={"Difficulty"} />
-            </SelectTrigger>
-            <SelectContent>
-              {DIFFICULTIES.map((diff) => (
-                <SelectItem key={diff} value={diff}>
-                  {diff}
-                </SelectItem>
-              ))}
-            </SelectContent>
+            {DIFFICULTIES.map((diff) => (
+              <SelectItem key={diff.key}>{diff.label}</SelectItem>
+            ))}
           </Select>
 
           <Select
-            onValueChange={(value) => {
-              updateFilter("topics", [value]);
-              setTopics(value);
-            }}
+            aria-label="topics"
+            placeholder="Select topics"
+            value={filters.topics}
+            onChange={(e) => updateFilter("topics", e.target.value)}
           >
-            <SelectTrigger>
-              <SelectValue placeholder={"Topic"} />
-            </SelectTrigger>
-            <SelectContent>
-              {TOPICS.map((topic) => (
-                <SelectItem key={topic} value={topic}>
-                  {topic}
-                </SelectItem>
-              ))}
-            </SelectContent>
+            {TOPICS.map((topic) => (
+              <SelectItem key={topic.key}>{topic.label}</SelectItem>
+            ))}
           </Select>
 
-          <Select onValueChange={(value) => updateFilter("skills", [value])}>
-            <SelectTrigger>
-              <SelectValue placeholder="Type" />
-            </SelectTrigger>
-            <SelectContent>
-              {TYPE.map((type) => (
-                <SelectItem key={type} value={type}>
-                  {type}
-                </SelectItem>
-              ))}
-            </SelectContent>
+          <Select
+            aria-label="skills"
+            placeholder="Select skills"
+            value={filters.skills}
+            onChange={(e) => updateFilter("skills", e.target.value)}
+          >
+            {TYPE.map((type) => (
+              <SelectItem key={type.key}>{type.label}</SelectItem>
+            ))}
           </Select>
         </div>
         <div className="flex flex-wrap gap-4 justify-center p-6">
-          <Button size={"lg"} className="bg-violet-500 hover:bg-violet-600">
-            <Sparkles className="mr-2 h-4 w-4" />
-            Create random quizz
-          </Button>
           <Button
             size={"lg"}
             variant="destructive"
             onClick={() => resetFilter()}
           >
-            Hủy thay đổi
+            Clear filter
           </Button>
           <Button
             size={"lg"}
@@ -277,7 +241,7 @@ export default function QuizManagement() {
           >
             Pick random quizz
           </Button>
-          <Button size={"lg"}>
+          <Button onClick={() => fetchQuizzes(filters.limit, filters.offset)} size={"lg"}>
             <Search className="mr-2 h-4 w-4" />
             Search
           </Button>
@@ -289,7 +253,7 @@ export default function QuizManagement() {
           pagination={{
             total: pagination.total,
             limit: pagination.limit,
-            offset: pagination.offset,
+            offset: pagination.offset
           }}
           onPaginationChange={handlePaginationChange}
           loading={loading}

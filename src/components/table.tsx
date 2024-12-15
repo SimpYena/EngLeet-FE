@@ -42,10 +42,7 @@ export const DataTable = <T extends object>({
     setLoadingNext(true);
     onPaginationChange({
       ...pagination,
-      offset: Math.min(
-        pagination.offset + pagination.limit,
-        pagination.total - pagination.limit
-      ),
+      offset: pagination.offset + pagination.limit
     });
   };
 

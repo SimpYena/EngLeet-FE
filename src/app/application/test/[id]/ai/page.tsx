@@ -1,11 +1,11 @@
 "use client";
 // import { Button } from "../../ui/button";
 import { Button } from "@nextui-org/react";
-import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../../../ui/avatar";
 import { Input } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import api from "../../../../utils/apis/user.service";
-import { TestDetails } from "../interface";
+import api from "@/utils/apis/user.service";
+import { TestDetails } from "../../interface";
 import { useRouter } from "next/navigation";
 import { getItem, setItemIntoStorage } from "@/utils/localStorage";
 import moment, { DurationInputArg1, DurationInputArg2 } from "moment";
@@ -17,16 +17,10 @@ export default function AssessmentTest({ params }: { params: { id: string } }) {
   useEffect(() => {
     const fetchTestDetails = async () => {
       try {
-        const ids = id.split("-");
-        if (ids[0] === "g") {
           const response = await api.getGeneratedTests();
-          const res = response.find((test) => test.id === +ids[1]);
+          const res = response.find((test) => test.id === +id);
           setTestDetails(res);
           return;
-        }
-
-        const response = await api.getTestDetail(id);
-        setTestDetails(response);
       } catch (error) {
         console.error(error);
         setShouldError(true);
@@ -36,7 +30,7 @@ export default function AssessmentTest({ params }: { params: { id: string } }) {
   }, [id]);
   const doTheTest = () => {
     const timers = JSON.parse(getItem("testTimer")) || [];
-    const timer = timers.find((timer: any) => timer.id === id);
+    const timer = timers.find((timer: any) => timer.id === `g-${id}`);
     if (!timer) {
       const duration = testDetails?.duration?.split(" ") || [0, "minutes"];
       setItemIntoStorage(
@@ -44,7 +38,7 @@ export default function AssessmentTest({ params }: { params: { id: string } }) {
         JSON.stringify([
           ...timers,
           {
-            id,
+            id: `g-${id}`,
             timeStamp: moment()
               .add(
                 duration[0] as DurationInputArg1,
@@ -56,7 +50,7 @@ export default function AssessmentTest({ params }: { params: { id: string } }) {
       );
     }
 
-    router.push(`${id}/detail`);
+    router.push(`ai/detail`);
   };
 
   return (

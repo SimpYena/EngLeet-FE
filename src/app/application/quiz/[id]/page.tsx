@@ -9,22 +9,15 @@ import {
 } from "@/app/application/ui/card";
 import { Separator } from "@/app/application/ui/separator";
 import api from "../../../../utils/apis/user.service";
-import { usePathname } from "next/navigation";
 import { Transcript } from "../interface";
 import Question from "./question";
 import Component from "./comment";
 import useTotalPagesStore from "@/stores/quizTotal";
 import { Button } from "@/app/application/ui/button";
 
-const extractIdFromPath = (path: string): string | null => {
-  const match = path.match(/\/application\/quiz\/(\d+)/);
-  return match ? match[1] : null;
-};
-
-const TranscriptUI = () => {
+const TranscriptUI = ({ params }: { params: { id: string } }) => {
+  const { id } = params;
   const [transcript, setTranscript] = useState<Transcript | null>(null);
-  const pathName = usePathname();
-  const id = extractIdFromPath(pathName) as string | null;
   const [showComment, setShowComment] = useState<boolean | null>(false);
   const [shouldError, setShouldError] = useState(false);
   const totalPages = useTotalPagesStore((state) => state.totalPages);
