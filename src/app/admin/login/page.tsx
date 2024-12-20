@@ -1,12 +1,23 @@
 "use client";
-import { Input, Button, Link } from "@nextui-org/react";
-import { ChangeEvent, Suspense, useEffect, useState } from "react";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
-import UserService from "@/utils/services/user.service";
-import toast from "@/components/toast";
+import { CustomButton } from "@/components/button";
+import {
+  Button,
+  Input,
+  Link,
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+} from "@nextui-org/react";
+import Image from "next/image";
+import banner from "../public/images/banner.png";
 
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { ChangeEvent, Suspense, useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import userService from "@/utils/services/user.service";
+import toast from "@/components/toast";
+import { EyeSlashIcon } from "@heroicons/react/24/outline";
+import { EyeIcon } from "lucide-react";
 
 function LoginForm() {
   const router = useRouter();
@@ -25,7 +36,7 @@ function LoginForm() {
     const verifyEmail = async () => {
     const query = Object.fromEntries(searchParams.entries());
     if (query.token) {
-      UserService.verifyEmail(query.token)
+      userService.verifyEmail(query.token)
         .then(() => {
           toast.success("Email verified successfully, please login");
         })
@@ -81,7 +92,7 @@ function LoginForm() {
     });
     // Handle successful form submission here
     // await UserService.login(formData);
-    const result = await UserService.login(formData);
+    const result = await userService.login(formData);
 
     if (result.errors) {
       toast.error("Wrong username or password");
@@ -171,10 +182,50 @@ function LoginForm() {
   );
 }
 
-export default function Main() {
+export default function Page() {
+  const pathName = usePathname();
+  const router = useRouter();
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      router.push("/application");
+    }
+  }, []);
+
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <LoginForm />
-    </Suspense>
+    <div>
+      <Navbar className="bg-background pt-3 fixed">
+        <NavbarBrand>
+          <p className="font-bold text-black">ENGLEET</p>
+        </NavbarBrand>
+        <NavbarContent justify="end">
+          <NavbarItem className="lg:flex">
+            <Link href="/auth/login" className="text-black">
+              Sign In
+            </Link>
+          </NavbarItem>
+          <NavbarItem>
+            <CustomButton
+              as={Link}
+              className="bg-black text-white"
+              href="/auth/register"
+              variant="solid"
+            >
+              Sign Up
+            </CustomButton>
+          </NavbarItem>
+        </NavbarContent>
+      </Navbar>
+      <div className="h-screen pt-20 flex ">
+        {!pathName.includes('/verify-email') && <div className="content-left flex-1 content-end">
+          <Image className="" src={banner} alt="banner"></Image>
+        </div>}
+        <div className="content-right flex flex-1 items-center justify-center">
+              <Suspense fallback={<div>Loading...</div>}>
+                <LoginForm />
+              </Suspense>
+        </div>
+      </div>
+    </div>
   );
 }

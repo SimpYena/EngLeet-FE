@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.1.5",
-    "@nextui-org/react": "^2.4.8",
+    "@nextui-org/react": "^2.6.8",
     "@radix-ui/react-avatar": "^1.1.1",
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-radio-group": "^1.2.1",

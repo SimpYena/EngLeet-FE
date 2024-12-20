@@ -1,8 +1,8 @@
 /* eslint-disable import/no-anonymous-default-export */
 import { User } from "@/types/user.type";
 import axios from "axios";
-import { QuizFilter } from "../../app/application/quiz/interface";
-import { TestFilter, TestPayload, TestSubmitPayload } from "@/app/application/test/interface";
+import { QuizFilter, Transcript } from "@/types/quiz.type";
+import { TestFilter, TestPayload, TestSubmitPayload } from "@/types/test.type";
 import axiosInterceptorInstance from "./axios";
 import { parseCookies } from "nookies";
 
@@ -19,16 +19,21 @@ const refreshToken = async (): Promise<any> => {
 };
 
 const register = async ({ email, full_name, gender, password }: User) => {
-  return axiosInterceptorInstance.post("/auth/register", {
+  const res = await axios.post(`${API_ENDPOINT}/auth/register`, {
     email,
     full_name,
     gender,
     password
   });
+  return res.data;
 };
 
 const login = async ({ email, password }: User): Promise<any> => {
-  return axiosInterceptorInstance.post("/auth/login", { email, password });
+  const res = await axios.post(`${API_ENDPOINT}/auth/login`, {
+    email,
+    password
+  });
+  return res.data.data;
 };
 
 const logout = async (): Promise<any> => {
@@ -36,7 +41,8 @@ const logout = async (): Promise<any> => {
 };
 
 const verifyEmail = async (token: string): Promise<any> => {
-  return axiosInterceptorInstance.patch(`/auth/verify-email/${token}`);
+  const res = await axios.patch(`${API_ENDPOINT}/auth/verify-email/${token}`);
+  return res.data;
 };
 
 const getCurrentUser = async (): Promise<any> => {
@@ -55,56 +61,94 @@ const submitAnswer = async (id: number, answer: string): Promise<any> => {
   return axiosInterceptorInstance.post(`/quizz/${id}`, { answer });
 };
 
-const getTest = async (filter: TestFilter): Promise<any> => {
-  return axiosInterceptorInstance.get("/test", { params: filter });
+const getTest = async (filter?: TestFilter): Promise<any> => {
+  const params = filter ? { params: filter } : {};
+  return axiosInterceptorInstance.get("/test", params);
 };
 
 const getTestDetail = async (id): Promise<any> => {
   return axiosInterceptorInstance.get(`/test/${id}`);
 };
+
 const getReadingTestDetail = async (id): Promise<TestPayload> => {
   return axiosInterceptorInstance.get(`/test/${id}/reading`);
-}
+};
 
 const getListeningTestDetail = async (id): Promise<TestPayload> => {
   return axiosInterceptorInstance.get(`/test/${id}/listening`);
-}
+};
 
 const submitTest = async (id, answers: TestSubmitPayload[]) => {
   return axiosInterceptorInstance.post(`/test/${id}/submit`, answers);
-}
+};
 
 const getSubmitedTest = async (id): Promise<any> => {
   return axiosInterceptorInstance.get(`/test/${id}/result`);
-}
+};
 
 const generateReadingTest = async (topic, difficulty): Promise<any> => {
-  return axiosInterceptorInstance.post('/generate/reading', { topic, difficulty });
-}
+  return axiosInterceptorInstance.post("/generate/reading", {
+    topic,
+    difficulty
+  });
+};
 
 const generateListeningTest = async (topic, difficulty): Promise<any> => {
-  return axiosInterceptorInstance.post('/generate/listening', { topic, difficulty });
-}
+  return axiosInterceptorInstance.post("/generate/listening", {
+    topic,
+    difficulty
+  });
+};
 
 const generateAssessmentTest = async (): Promise<any> => {
-  return axiosInterceptorInstance.get('/generate/assessment');
-}
+  return axiosInterceptorInstance.get("/generate/assessment");
+};
 
 const submitAssessmentTest = async (answers): Promise<any> => {
-  return axiosInterceptorInstance.post('/generate/submit', { answers });
-}
+  return axiosInterceptorInstance.post("/generate/submit", { answers });
+};
 
 const getGeneratedTests = async (): Promise<any> => {
-  return axiosInterceptorInstance.get('/generate/test');
+  return axiosInterceptorInstance.get("/generate/test");
 };
 
 const getGeneratedTest = async (id): Promise<any> => {
   return axiosInterceptorInstance.get(`/generate/test/${id}`);
-}
+};
 
 const submitGeneratedTest = async (id, answer): Promise<any> => {
   return axiosInterceptorInstance.post(`/generate/submit`, { answer });
-}
+};
+
+const getLeaderboard = async (limit: number, offset: number): Promise<any> => {
+  return axiosInterceptorInstance.get("/quizz/view/leaderboard", {
+    params: { limit, offset }
+  });
+};
+
+const createReadingQuiz = async (data): Promise<any> => {
+  return axiosInterceptorInstance.post("/quizz/create/reading", data);
+};
+
+const createListeningQuiz = async (data): Promise<any> => {
+  return axiosInterceptorInstance.post("/quizz/create/listening", data);
+};
+
+const createTest = async (data): Promise<any> => {
+  return axiosInterceptorInstance.post("/test", data);
+};
+
+const createSection = async (data): Promise<any> => {
+  return axiosInterceptorInstance.post("/test/section", data);
+};
+
+const createSectionContext = async (data): Promise<any> => {
+  return axiosInterceptorInstance.post("/test/section-context", data);
+};
+
+const addQuestion = async (data): Promise<any> => {
+  return axiosInterceptorInstance.post("/test/question", data);
+};
 
 export default {
   register,
@@ -128,5 +172,12 @@ export default {
   submitAssessmentTest,
   getGeneratedTests,
   getGeneratedTest,
-  submitGeneratedTest
+  submitGeneratedTest,
+  getLeaderboard,
+  createReadingQuiz,
+  createListeningQuiz,
+  createTest,
+  createSection,
+  createSectionContext,
+  addQuestion
 };

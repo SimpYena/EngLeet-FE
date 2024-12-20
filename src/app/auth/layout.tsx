@@ -11,13 +11,14 @@ import Image from "next/image";
 import banner from "../public/images/banner.png";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathName = usePathname();
   const router = useRouter();
   useEffect(() => {
     const user = localStorage.getItem("user");
@@ -51,9 +52,9 @@ export default function AuthLayout({
         </NavbarContent>
       </Navbar>
       <div className="h-screen pt-20 flex ">
-        <div className="content-left flex-1 content-end">
+        {!pathName.includes('/verify-email') && <div className="content-left flex-1 content-end">
           <Image className="" src={banner} alt="banner"></Image>
-        </div>
+        </div>}
         <div className="content-right flex flex-1 items-center justify-center">
           {children}
         </div>

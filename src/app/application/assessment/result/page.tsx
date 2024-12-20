@@ -57,7 +57,7 @@ export default function QuizCompletion({ params }: { params: { id: string } }) {
               Press the button below to view your results
             </p>
 
-            <Button variant="solid" color="primary" onPress={viewResult}>
+            <Button variant="solid" color="primary" onClick={viewResult}>
               View Results
             </Button> */}
           </main>

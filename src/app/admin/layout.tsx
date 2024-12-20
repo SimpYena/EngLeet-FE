@@ -1,5 +1,5 @@
 "use client";
-import Sidebar from "@/components/sidebar";
+import AdminSidebar from "@/components/adminSidebar";
 import { useUser } from "@/provider/AuthContent";
 
 export default function ApplicationLayout({
@@ -9,16 +9,16 @@ export default function ApplicationLayout({
 }) {
   const user = useUser();
 
-  return user ? (
+  return (
     <div className="flex h-screen bg-gray-50">
       <aside className=" bg-white border-r">
         <div className="space-y-4 flex flex-col">
-          <Sidebar />
+          <AdminSidebar />
         </div>
       </aside>
       <div className="container bg-[#f5f5f5] mx-auto p-6 space-y-6 overflow-y-auto h-screen">
       {children}
       </div>
     </div>
-  ): <div>Loading.....</div>;
+  );
 }

@@ -9,7 +9,7 @@ import api from "../../../../../utils/apis/user.service";
 import userService from "@/utils/services/user.service";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { SectionContext } from "../../interface";
+import { SectionContext } from "@/types/test.type";
 import { getItem, setItemIntoStorage } from "@/utils/localStorage";
 import moment from "moment";
 import {
@@ -81,7 +81,6 @@ export default function TestInterface({ params }: { params: { id: string } }) {
         clearInterval(interval);
       }
     }, 1000);
-
 
     let storageTest = getItem("test") || "[]";
     storageTest = JSON.parse(storageTest);
@@ -391,7 +390,7 @@ export default function TestInterface({ params }: { params: { id: string } }) {
                   </span>
                 </div>
 
-                <Button variant="solid" color="danger" onPress={onOpen}>
+                <Button variant="solid" color="danger" onClick={onOpen}>
                   End now
                 </Button>
               </div>
@@ -623,10 +622,10 @@ export default function TestInterface({ params }: { params: { id: string } }) {
                 </p>
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
+                <Button color="danger" variant="light" onClick={onClose}>
                   Close
                 </Button>
-                <Button color="primary" onPress={submitTest}>
+                <Button color="primary" onClick={submitTest}>
                   Submit
                 </Button>
               </ModalFooter>

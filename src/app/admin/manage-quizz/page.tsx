@@ -1,8 +1,21 @@
 "use client";
-import { DataTable } from "@/components/table";
-import { Input } from "@/app/application/ui/input";
-import { Select, SelectItem, Button } from "@nextui-org/react";
-import { CheckCircle2, ChevronDown, FileBarChart, Shuffle, Search, X } from "lucide-react";
+import { DataTable } from "./table";
+import {
+  Select,
+  SelectItem,
+  Button,
+  useDisclosure,
+  Input
+} from "@nextui-org/react";
+import {
+  CheckCircle2,
+  ChevronDown,
+  ClipboardPlus,
+  FileBarChart,
+  Pencil,
+  Search,
+  X
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   mapColorToDifficulty,
@@ -12,39 +25,41 @@ import {
 } from "@/types/quiz.type";
 import api from "../../../utils/apis/user.service";
 import useTotalPagesStore from "@/stores/quizTotal";
-import { useRouter } from "next/navigation";
 import _ from "lodash";
+import ModalComponent from "./modal";
+
+const DIFFICULTIES = [
+  { key: "Easy", label: "Easy" },
+  { key: "Medium", label: "Medium" },
+  { key: "Hard", label: "Hard" }
+];
+const TOPICS = [
+  { key: 1, label: "Life" },
+  { key: 2, label: "School" },
+  { key: 3, label: "Environment" },
+  { key: 4, label: "Culture" },
+  { key: 5, label: "Technology" },
+  { key: 6, label: "History" },
+  { key: 7, label: "Sports" },
+  { key: 8, label: "Work" },
+  { key: 9, label: "Science" },
+  { key: 10, label: "Family" },
+];
+const TYPE = [
+  { key: "Reading", label: "Reading" },
+  { key: "Listening", label: "Listening" }
+];
 
 export default function QuizManagement() {
-  const DIFFICULTIES = [
-    { key: "Easy", label: "Easy" },
-    { key: "Medium", label: "Medium" },
-    { key: "Hard", label: "Hard" }
-  ];
-  const TOPICS = [
-    { key: "School", label: "School" },
-    { key: "Environment", label: "Environment" },
-    { key: "Culture", label: "Culture" },
-    { key: "Life", label: "Life" },
-    { key: "Family", label: "Family" },
-    { key: "Technology", label: "Technology" },
-    { key: "History", label: "History" },
-    { key: "Work", label: "Work" },
-    { key: "Science", label: "Science" }
-  ];
-  const TYPE = [
-    { key: "Reading", label: "Reading" },
-    { key: "Listening", label: "Listening" }
-  ];
-
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+  const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
   const [pagination, setPagination] = useState({
     total: 0,
     limit: 5,
     offset: 0
   });
   const [loading, setLoading] = useState<boolean>(false);
-  const router = useRouter();
   const [filters, setFilters] = useState<QuizFilter>({
     limit: 5,
     offset: 0,
@@ -91,19 +106,15 @@ export default function QuizManagement() {
     fetchQuizzes();
   }, []);
 
-  const pickRandomQuiz = () => {
-    router.push(
-      `/application/quiz/${Math.floor(Math.random() * pagination.total)}`
-    );
+  const openAddQuizzModal = (quiz?: Quiz) => {
+    setSelectedQuiz(quiz || null);
+    onOpen();
   };
 
   const columns = [
     {
-      header: "Status",
-      accessor: (row: Quiz) =>
-        row.status == 1 ? (
-          <CheckCircle2 className="h-4 w-4 text-green-500" />
-        ) : null
+      header: "ID",
+      accessor: (row: Quiz) => row.id
     },
     {
       header: "Title",
@@ -142,20 +153,6 @@ export default function QuizManagement() {
           {row.type}
         </span>
       )
-    },
-    {
-      header: "Action",
-      accessor: (row: Quiz) => (
-        <Button
-          onClick={() => {
-            router.push(`/application/quiz/${row.id}`);
-          }}
-          variant="solid"
-          color="primary"
-        >
-          Start
-        </Button>
-      )
     }
   ];
 
@@ -185,7 +182,7 @@ export default function QuizManagement() {
   return (
     // <div className="container mx-auto p-6 space-y-6 bg-white overflow-y-auto h-screen">
     <div className=" mx-auto space-y-6 p-6">
-      <h1 className="text-4xl font-bold">Quizz</h1>
+      <h1 className="text-4xl font-bold">Manage quizz</h1>
       <div className="flex gap-4">
         <Input
           placeholder="Search"
@@ -232,18 +229,31 @@ export default function QuizManagement() {
           ))}
         </Select>
       </div>
-      <div className="flex flex-wrap gap-4 justify-center p-6">
-        <Button size={"md"} variant="solid" color="danger" onClick={() => resetFilter()}>
+      <div className="flex flex-wrap gap-4 justify-end py-4">
+        <Button
+          size="md"
+          variant="solid"
+          color="success"
+          className="text-white"
+          onClick={() => openAddQuizzModal()}
+        >
+          <ClipboardPlus className="mr-2 h-4 w-4" />
+          Add new quizz
+        </Button>
+        <Button
+          size="md"
+          variant="solid"
+          color="danger"
+          onClick={() => resetFilter()}
+        >
           <X className="mr-2 h-4 w-4" />
           Clear filter
         </Button>
-        <Button size={"md"} variant="solid" color="success" onClick={() => pickRandomQuiz()}>
-          <Shuffle className="mr-2 h-4 w-4" />
-          Pick random quizz
-        </Button>
         <Button
           onClick={() => fetchQuizzes(filters.limit, filters.offset)}
-          size={"md"}
+          variant="solid"
+          color="primary"
+          size="md"
         >
           <Search className="mr-2 h-4 w-4" />
           Search
@@ -261,6 +271,7 @@ export default function QuizManagement() {
         onPaginationChange={handlePaginationChange}
         loading={loading}
       />
+      <ModalComponent onOpen={onOpen} onClose={onClose} isOpen={isOpen} selectedQuiz={selectedQuiz} />
     </div>
     // </div>
   );

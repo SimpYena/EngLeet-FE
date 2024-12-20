@@ -29,7 +29,7 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
       removeItem("user");
       nookies.destroy(null, accessTokenCookieName);
       nookies.destroy(null, refreshTokenCookieName);
-      if (pathName.includes("/auth")) {
+      if (pathName.includes("/auth") || pathName.includes("/admin")) {
         return;
       }
 

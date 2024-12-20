@@ -10,7 +10,7 @@ import {
 import { QuizCard } from "./quizCard";
 import { AiCard } from "./aiCard";
 import { useEffect, useState } from "react";
-import { Tests, TestFilter } from "./interface";
+import { Tests, TestFilter } from "@/types/test.type";
 import { useRouter } from "next/navigation";
 import useTotalPagesStore from "@/stores/quizTotal";
 import api from "../../../utils/apis/user.service";
@@ -85,7 +85,7 @@ export default function Test() {
 
   const handleDoNowAIClick = (testId) => {
     router.push(`test/${testId}/ai`);
-  }
+  };
 
   const generateTest = async () => {
     setLoadingGenerating(true);
@@ -141,7 +141,8 @@ export default function Test() {
   }, [filters, setTotalPages]);
 
   return (
-    <div className="container mx-auto p-6 space-y-6 bg-white overflow-y-auto h-screen bg-white">
+    // <div className="container mx-auto p-6 space-y-6 bg-white overflow-y-auto h-screen bg-white">
+    <>
       <div className="mx-auto space-y-6 p-6">
         <h1 className="text-4xl font-bold">Practice Test</h1>
 
@@ -216,9 +217,7 @@ export default function Test() {
               key={index}
               {...card}
               description={card.description}
-              onDoNowClick={() =>
-                handleDoNowAIClick(card.id)
-              }
+              onDoNowClick={() => handleDoNowAIClick(card.id)}
             />
           ))}
         </div>
@@ -268,13 +267,13 @@ export default function Test() {
                 </Select>
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
+                <Button color="danger" variant="light" onClick={onClose}>
                   Close
                 </Button>
                 <Button
                   color="primary"
                   isLoading={loadingGenerating}
-                  onPress={generateTest}
+                  onClick={generateTest}
                 >
                   Action
                 </Button>
@@ -283,6 +282,8 @@ export default function Test() {
           )}
         </ModalContent>
       </Modal>
-    </div>
+    </>
+
+    // </div>
   );
 }
