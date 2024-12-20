@@ -9,7 +9,7 @@ import {
   MoreVertical,
 } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/app/application/ui/radio-group";
-import { QuizAttempt, Transcript } from "../interface";
+import { QuizAttempt, Transcript } from "@/types/quiz.type";
 import api from "../../../../utils/apis/user.service";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -28,7 +28,7 @@ export default function Question({
   page,
 }: QuestionProps) {
   const [currentPage, setCurrentPage] = useState(Number(page));
-  const [answer, setAnswer] = useState<QuizAttempt>(null);
+  const [answer, setAnswer] = useState<QuizAttempt>();
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const router = useRouter();
@@ -129,7 +129,7 @@ export default function Question({
             e.preventDefault();
           }}
         >
-          {args?.answer.map((item, index) => (
+          {args?.answer?.map((item, index) => (
             <motion.label
               key={item}
               className={`flex items-center space-x-2 rounded-lg border p-4 hover:bg-accent cursor-pointer ${

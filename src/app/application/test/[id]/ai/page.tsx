@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../../../ui/avatar";
 import { Input } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import api from "@/utils/apis/user.service";
-import { TestDetails } from "../../interface";
+import { TestDetails } from "@/types/test.type";
 import { useRouter } from "next/navigation";
 import { getItem, setItemIntoStorage } from "@/utils/localStorage";
 import moment, { DurationInputArg1, DurationInputArg2 } from "moment";

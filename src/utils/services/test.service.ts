@@ -92,6 +92,62 @@ const getGeneratedTest = async (id): Promise<any> => {
     });
 };
 
+const createQuiz = async (quiz): Promise<any> => {
+  if (quiz.type === "Reading") {
+    return UserApi.createReadingQuiz(quiz);
+  }
+
+  if (quiz.type === "Listening") {
+    return UserApi.createListeningQuiz(quiz);
+  }
+
+  return;
+}
+
+const createTest = async (test): Promise<any> => {
+  return UserApi.createTest(test)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.log(error);
+      return null;
+    });
+};
+
+const createSection = async (section): Promise<any> => {
+  return UserApi.createSection(section)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.log(error);
+      return null;
+    });
+}
+
+const createSectionContext = async (sectionContext): Promise<any> => {
+  return UserApi.createSectionContext(sectionContext)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.log(error);
+      return null;
+    });
+}
+
+const addQuestion = async (question): Promise<any> => {
+  return UserApi.addQuestion(question)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.log(error);
+      return null;
+    });
+}
+
 export default {
   getSubmitedTest,
   generateTest,
@@ -100,5 +156,7 @@ export default {
   generateListeningTest,
   getReadingTest,
   getListeningTest,
-  getGeneratedTest
+  getGeneratedTest,
+  createQuiz,
+  createTest
 };

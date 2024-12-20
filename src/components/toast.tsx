@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 
-const option = { position: 'bottom-left' };
+const option = { position: 'top-right' };
 
 const info = (msg: string) => {
   toast.info(msg, option);

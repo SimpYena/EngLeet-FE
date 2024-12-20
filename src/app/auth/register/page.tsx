@@ -4,21 +4,23 @@ import { ChangeEvent, useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import UserService from "@/utils/services/user.service";
 import toast from "@/components/toast";
+import { useRouter } from "next/navigation";
 
 export default function Main() {
+  const router = useRouter();
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [formData, setFormData] = useState({
-    email: "",
-    full_name: "",
-    gender: "None",
-    password: "",
-    confirmPassword: "",
+    email: "kotentuoi1122+2@gmail.com",
+    full_name: "wdw",
+    gender: "Male",
+    password: "Tuananh@123",
+    confirmPassword: "Tuananh@123"
   });
   const [errors, setErrors] = useState({
     email: "",
     full_name: "",
-    password: "",
+    password: ""
   });
 
   const togglePasswordVisible = () => setPasswordVisible(!isPasswordVisible);
@@ -26,14 +28,16 @@ export default function Main() {
     setConfirmPasswordVisible(!isConfirmPasswordVisible);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setErrors({ ...errors, [e.target.name]: "" });
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const validateForm = () => {
+    let isValid = true;
     const newErrors = {
       email: "",
       full_name: "",
-      password: "",
+      password: ""
     };
     if (!formData.email) {
       newErrors.email = "Email is required.";
@@ -52,13 +56,13 @@ export default function Main() {
     }
 
     setErrors(newErrors);
-
     Object.keys(newErrors).forEach((key) => {
       if (newErrors[key]) {
-        return false;
+        isValid = false;
       }
     });
-    return true;
+
+    return isValid;
   };
 
   const handleSubmit = async (e) => {
@@ -71,29 +75,24 @@ export default function Main() {
     setErrors({
       email: "",
       full_name: "",
-      password: "",
+      password: ""
     });
 
     const result = await UserService.register(formData);
 
-    if (result.errors) {
-      toast.error("Register failed");
-      const parsedErrors = result.errors.reduce(
-        (acc, error) => {
-          acc[error.field] = error.message;
-          return acc;
-        },
-        {
-          email: "",
-          full_name: "",
-          password: "",
-        }
-      );
-      setErrors(parsedErrors);
+    if (result.error_id) {
+      toast.error(result.message);
+      const errors = result.errors.map((error) => {
+        return {
+          [error.field]: error.message
+        };
+      });
+      setErrors(Object.assign({}, ...errors));
       return;
     }
 
-    toast.success("Register success");
+    // toast.success("Register success, please check your email to verify.");
+    router.push("/auth/verify-email");
   };
 
   return (

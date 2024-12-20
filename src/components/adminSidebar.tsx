@@ -23,40 +23,16 @@ import userService from "@/utils/apis/user.service";
 
 const NAV_ITEMS = [
   {
-    title: "Homepage",
+    title: "Quizz",
     icon: Home,
-    path: "/application",
-    label: "Home"
+    path: "/admin/manage-quizz",
+    label: "Manage Quizz"
   },
   {
     title: "Test",
     icon: FileText,
-    path: "/application/test",
-    label: "Tests"
-  },
-  {
-    title: "Quiz",
-    icon: HelpCircle,
-    path: "/application/quiz",
-    label: "Quiz"
-  },
-  {
-    title: "Rank",
-    icon: Trophy,
-    path: "/application/leaderboard",
-    label: "Leaderboard"
-  },
-  {
-    title: "Profile",
-    icon: User,
-    path: "/profile",
-    label: "Profile"
-  },
-  {
-    title: "Setting",
-    icon: Settings,
-    path: "/setting",
-    label: "Settings"
+    path: "/admin/manage-test",
+    label: "Manage Test"
   }
 ];
 

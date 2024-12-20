@@ -9,7 +9,7 @@ import {
 } from "@/app/application/ui/card";
 import { Separator } from "@/app/application/ui/separator";
 import api from "../../../../utils/apis/user.service";
-import { Transcript } from "../interface";
+import { Transcript } from "@/types/quiz.type";
 import Question from "./question";
 import Component from "./comment";
 import useTotalPagesStore from "@/stores/quizTotal";

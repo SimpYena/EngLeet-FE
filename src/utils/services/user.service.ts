@@ -3,7 +3,7 @@ import UserApi from "../apis/user.service";
 import { ErrorInfo } from "@/types/error.type";
 import useUserStore from "@/stores/user.store";
 import { setItemIntoStorage } from "../localStorage";
-import { setCookie } from 'nookies'
+import { setCookie } from "nookies";
 
 const setToken = ({ access_token, refresh_token }) => {
   setCookie(null, "el-access-token", access_token, {
@@ -19,14 +19,16 @@ const setToken = ({ access_token, refresh_token }) => {
 const register = async (payload: User) => {
   return UserApi.register(payload)
     .then((response) => {
-      return response.data as User;
+      console.log(response);
+      return response as User;
     })
     .catch(({ response }) => {
+      console.log(response);
       return response.data.error;
     });
 };
 
-const login = async (payload: User): Promise<User> => {
+const login = async (payload: User): Promise<any> => {
   const setUser = useUserStore.getState().setUser;
   return UserApi.login(payload)
     .then((credential) => {
@@ -47,6 +49,7 @@ const login = async (payload: User): Promise<User> => {
 const verifyEmail = async (token: string) => {
   return UserApi.verifyEmail(token)
     .then((response) => {
+      console.log(response.data);
       return response.data;
     })
     .catch(({ errors }: ErrorInfo) => {
@@ -66,10 +69,20 @@ const refreshToken = async () => {
 };
 
 const loadCurrentUser = async () => {
-    return UserApi.getCurrentUser()
-    .then((user) => {
-      return user;
+  return UserApi.getCurrentUser().then((user) => {
+    return user;
+  });
+};
+
+const getRankers = async (limit: number | string, offset: number | string): Promise<any> => {
+  return UserApi.getLeaderboard(limit, offset).then(({items}) => {
+    return items.map((ranker, index) => {
+      return {
+        ...ranker,
+        position: offset + index + 1
+      };
     });
+  });
 };
 
 export default {
@@ -78,5 +91,6 @@ export default {
   login,
   verifyEmail,
   loadCurrentUser,
-  refreshToken
+  refreshToken,
+  getRankers
 };

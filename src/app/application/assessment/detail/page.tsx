@@ -231,7 +231,7 @@ export default function TestInterface() {
                   </span>
                 </div>
 
-                <Button variant="solid" color="danger" onPress={onOpen}>
+                <Button variant="solid" color="danger" onClick={onOpen}>
                   End now
                 </Button>
               </div>
@@ -345,10 +345,10 @@ export default function TestInterface() {
                 </p>
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
+                <Button color="danger" variant="light" onClick={onClose}>
                   Close
                 </Button>
-                <Button color="primary" onPress={submitTest}>
+                <Button color="primary" onClick={submitTest}>
                   Submit
                 </Button>
               </ModalFooter>

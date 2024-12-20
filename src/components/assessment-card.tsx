@@ -9,14 +9,14 @@ export default function AssessmentCard() {
   }
 
   return (
-    <div className="bg-white rounded-3xl p-8 shadow-sm">
+    <div className="bg-white rounded-3xl p-8 shadow-md">
       <div className="max-w-md">
         <div className="flex items-center font-bold text-lg gap-2 mb-8">
           <Pencil />
           <h3 className="text-lg">Do the assessment test</h3>
         </div>
 
-        <div className="flex justify-center flex-col gap-4">
+        <div className="flex justify-center items-center flex-col gap-4">
           <Image
             src={
               "https://cdn-icons-png.freepik.com/256/1581/1581884.png?semt=ais_hybrid"

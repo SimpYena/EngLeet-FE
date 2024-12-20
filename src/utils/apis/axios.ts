@@ -4,7 +4,10 @@ import authServices from "./user.service";
 import userService from "../services/user.service";
 
 const axiosInterceptorInstance = axios.create({
-  baseURL: "http://18.142.54.43:3000/api/v1"
+  baseURL: "http://18.142.54.43:3000/api/v1",
+  headers: {
+    "Content-Type": "application/json"
+  }
 });
 
 axiosInterceptorInstance.interceptors.request.use(
@@ -19,6 +22,12 @@ axiosInterceptorInstance.interceptors.request.use(
 
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+
+    const specificRoute = ["/quizz/create/listening", "/test"]
+    // Overwrite header for specific route
+    if (config.method === "post" && specificRoute.includes(config.url || "")) {
+      config.headers["Content-Type"] = "multipart/form-data";
     }
 
     return config;
@@ -40,9 +49,9 @@ axiosInterceptorInstance.interceptors.response.use(
 
       try {
         const res = await authServices.refreshToken();
-        userService.setToken(res);        
+        userService.setToken(res);
         originalRequest.headers["Authorization"] = `Bearer ${res.access_token}`;
-        
+
         return axiosInterceptorInstance(originalRequest);
       } catch (refreshError) {
         return Promise.reject(refreshError);
