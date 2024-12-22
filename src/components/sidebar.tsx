@@ -49,7 +49,7 @@ const NAV_ITEMS = [
   {
     title: "Profile",
     icon: User,
-    path: "/profile",
+    path: "/application/profile",
     label: "Profile"
   },
   {

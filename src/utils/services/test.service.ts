@@ -148,6 +148,17 @@ const addQuestion = async (question): Promise<any> => {
     });
 }
 
+const getNewestTest = async (): Promise<any> => {
+  return UserApi.getNewestTest()
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.log(error);
+      return null;
+    });
+}
+
 export default {
   getSubmitedTest,
   generateTest,
@@ -158,5 +169,9 @@ export default {
   getListeningTest,
   getGeneratedTest,
   createQuiz,
-  createTest
+  createTest,
+  createSection,
+  createSectionContext,
+  addQuestion,
+  getNewestTest
 };

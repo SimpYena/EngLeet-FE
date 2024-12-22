@@ -23,10 +23,10 @@ axiosInterceptorInstance.interceptors.request.use(
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
-
-    const specificRoute = ["/quizz/create/listening", "/test"]
+    console.log(config.url);
+    const specificRoute = ["/quizz/create/listening", "/test", "/auth/profile"]
     // Overwrite header for specific route
-    if (config.method === "post" && specificRoute.includes(config.url || "")) {
+    if (["post", "put"].includes(config.method as string) && specificRoute.includes(config.url || "")) {
       config.headers["Content-Type"] = "multipart/form-data";
     }
 

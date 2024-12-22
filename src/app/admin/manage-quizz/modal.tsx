@@ -13,8 +13,6 @@ import {
 import { useState } from "react";
 import { X } from "lucide-react";
 import testService from "@/utils/services/test.service";
-import { useEffect } from "react";
-import userService from "@/utils/apis/user.service";
 
 enum Difficulty {
   EASY = "Easy",

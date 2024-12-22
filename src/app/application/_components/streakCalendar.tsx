@@ -1,42 +1,31 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Calendar } from "@/components/ui/calendar"
-import moment from "moment"
+import * as React from "react";
+import { Calendar } from "@/components/ui/calendar";
+import moment from "moment";
 
-export default function StreakCalendar() {
-  const [markedDates, setMarkedDates] = React.useState<Date[]>([])
-
+export default function StreakCalendar({ dates = [] }: { dates: string[] }) {
+  const [markedDates, setMarkedDates] = React.useState<Date[]>([]);
+  const [parsedDates, setParsedDates] = React.useState<Date[]>([]);
   React.useEffect(() => {
-    // Example logic to generate streaks
-    const generateStreaks = () => {
-      const today = moment().startOf('day');
-      const streaks = [];
-      for (let i = 0; i < 10; i++) {
-      streaks.push(today.clone().subtract(i, 'days').toDate());
-      }
-      return streaks;
-    };
-
-    setMarkedDates(generateStreaks());
-  }, [])
+    const p = dates.map((date) => moment(date, "YYYY/MM/DD").toDate());
+    setParsedDates(p);
+  }, [dates]);
 
   return (
     <div className="space-y-4">
       <Calendar
         mode="multiple"
-        selected={markedDates}
+        selected={parsedDates}
         className="rounded-md border shadow"
-        
         modifiers={{
-          marked: markedDates
+          marked: parsedDates
         }}
         modifiersStyles={{
-          marked: { backgroundColor: 'rgb(34 197 94)', borderRadius: '50%' }
+          marked: { backgroundColor: "rgb(34 197 94)", borderRadius: "50%" }
         }}
-        fromDate={moment().startOf('date').toDate()}
+        fromDate={moment().startOf("date").toDate()}
       />
     </div>
-  )
+  );
 }
-

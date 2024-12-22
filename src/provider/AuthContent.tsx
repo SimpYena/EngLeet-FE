@@ -37,7 +37,8 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
       return;
     }
 
-    userService
+    const fetchUser = async () => {
+    await userService
       .loadCurrentUser()
       .then((res) => {
         if (res) {
@@ -49,6 +50,8 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
         console.error("err", err);
         setUser({} as User);
       });
+    }
+    fetchUser();
   }, []);
 
   return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
