@@ -18,6 +18,8 @@ import { Button } from "@/app/application/ui/button";
 const TranscriptUI = ({ params }: { params: { id: string } }) => {
   const { id } = params;
   const [transcript, setTranscript] = useState<Transcript | null>(null);
+  const [nextTranscript, setNextTranscript] = useState<Transcript | null>(null);
+  const [previousTranscript, setPreviousTranscript] = useState<Transcript | null>(null);
   const [showComment, setShowComment] = useState<boolean | null>(false);
   const [shouldError, setShouldError] = useState(false);
   const totalPages = useTotalPagesStore((state) => state.totalPages);
@@ -27,6 +29,9 @@ const TranscriptUI = ({ params }: { params: { id: string } }) => {
     const fetchTranscript = async () => {
       try {
         const response = await api.getQuizDetail(id as string);
+        if (response.error) {
+          throw new Error(response.error);
+        }
         setTranscript(response);
       } catch (error) {
         console.error(error);
@@ -37,10 +42,9 @@ const TranscriptUI = ({ params }: { params: { id: string } }) => {
     fetchTranscript();
   }, [id]);
   
-
   return (
-    <div className="w-full mx-auto p-4 space-y-4 m-12">
-      <div className="w-full flex justify-center gap-5">
+    <div className="w-full mx-auto p-4 space-y-4 m-12 bg-white rounded-lg shadow-lg">
+      <div className="w-full flex flex-col justify-center gap-5">
         <div className="m-5">
           {shouldError ? (
             <Card>

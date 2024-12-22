@@ -150,6 +150,36 @@ const addQuestion = async (data): Promise<any> => {
   return axiosInterceptorInstance.post("/test/question", data);
 };
 
+const generateChat = async (data): Promise<any> => {
+  return axiosInterceptorInstance.post("/generate/chat", data);
+};
+
+const getNewestTest = async (): Promise<any> => {
+  return axiosInterceptorInstance.get("/test/view/recently");
+};
+
+const getRecommendQuizz = async (): Promise<any> => {
+  return axiosInterceptorInstance.get("/quizz/recommend/view");
+};
+
+const getQuizzReview = async (id): Promise<any> => {
+  return axiosInterceptorInstance.get(`/quizz/${id}/review`);
+};
+
+const submitQuizzReview = async (id, review): Promise<any> => {
+  return axiosInterceptorInstance.post(`/quizz/${id}/review`, {
+    description: review
+  });
+};
+
+const updateProfile = async (data, image): Promise<any> => {
+  return axiosInterceptorInstance.put("/auth/profile", {...data, image});
+}
+
+const getStreaks = async (): Promise<any> => {
+  return axiosInterceptorInstance.get("/quizz/user/streaks");
+}
+
 export default {
   register,
   login,
@@ -179,5 +209,12 @@ export default {
   createTest,
   createSection,
   createSectionContext,
-  addQuestion
+  addQuestion,
+  generateChat,
+  getNewestTest,
+  getRecommendQuizz,
+  submitQuizzReview,
+  getQuizzReview,
+  updateProfile,
+  getStreaks
 };

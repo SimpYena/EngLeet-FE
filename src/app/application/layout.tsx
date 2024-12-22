@@ -16,7 +16,7 @@ export default function ApplicationLayout({
           <Sidebar />
         </div>
       </aside>
-      <div className="container bg-[#f5f5f5] mx-auto p-6 space-y-6 overflow-y-auto h-screen">
+      <div className="container mx-auto p-6 max-w-[1024px] space-y-6 overflow-y-auto h-screen">
       {children}
       </div>
     </div>

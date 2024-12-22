@@ -1,18 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/app/application/ui/button";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Settings,
-  MoreVertical,
-} from "lucide-react";
+// import { Button } from "@/app/application/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/app/application/ui/radio-group";
 import { QuizAttempt, Transcript } from "@/types/quiz.type";
 import api from "../../../../utils/apis/user.service";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { Button } from "@nextui-org/react";
 
 interface QuestionProps {
   args?: Transcript | null;
@@ -25,7 +21,7 @@ export default function Question({
   args,
   total,
   showComment,
-  page,
+  page
 }: QuestionProps) {
   const [currentPage, setCurrentPage] = useState(Number(page));
   const [answer, setAnswer] = useState<QuizAttempt>();
@@ -51,69 +47,48 @@ export default function Question({
   const handleNext = () => {
     setSelectedAnswer("");
     setIsCorrect(null);
-
-    let nextPage = currentPage + 1;
-
-    if (currentPage === total) {
-      nextPage = 1;
-    }
-
-    setCurrentPage(nextPage);
-
-    router.push(`/application/quiz/${nextPage}`);
+    const nextQuizz = args?.nextQuizz;
+    router.push(`/application/quiz/${nextQuizz?.id}`);
   };
 
   const handlePrevious = () => {
     setSelectedAnswer("");
     setIsCorrect(null);
-
-    let previousPage = currentPage - 1;
-
-    if (currentPage === 1) {
-      previousPage = total;
-    }
-
-    setCurrentPage(previousPage);
-
-    router.push(`/application/quiz/${previousPage}`);
+    const previousQuizz = args?.previousQuizz;
+    router.push(`/application/quiz/${previousQuizz?.id}`);
   };
 
   return (
     <div className="w-full max-w-3xl mx-auto p-4 space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => handlePrevious()}
-            disabled={currentPage === 1}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <span className="text-sm">
-            {currentPage} / {total}
-          </span>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => handleNext()}
-            disabled={currentPage === total}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
+          {args?.previousQuizz && (
+            <Button
+              variant="ghost"
+              startContent={<ChevronLeft className="h-4 w-4" />}
+              onPress={() => handlePrevious()}
+              className="font-medium"
+            >
+              {args?.previousQuizz?.title}
+            </Button>
+          )}
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon">
-            <Settings className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="icon">
-            <MoreVertical className="h-4 w-4" />
-          </Button>
+          {args?.nextQuizz && (
+            <Button
+              variant="ghost"
+              endContent={<ChevronRight className="h-4 w-4" />}
+              onPress={() => handleNext()}
+              className="font-medium"
+            >
+              {args?.nextQuizz?.title}
+            </Button>
+          )}
         </div>
       </div>
 
       <div className="p-4 bg-muted rounded-lg">
-        <h2 className="text-xl font-semibold">{args?.id}</h2>
+        <h2 className="text-xl font-semibold">{args?.title}</h2>
         <p className="text-muted-foreground">{args?.context}</p>
       </div>
 
@@ -145,7 +120,7 @@ export default function Question({
                 selectedAnswer === item && isCorrect
                   ? {
                       scale: [1, 1.05, 1],
-                      transition: { repeat: 3, duration: 0.3 },
+                      transition: { repeat: 3, duration: 0.3 }
                     }
                   : {}
               }
@@ -167,7 +142,11 @@ export default function Question({
         </RadioGroup>
 
         <div className="flex justify-end">
-          <Button onClick={handleCheck} className="w-auto" disabled={isCorrect}>
+          <Button
+            onPress={handleCheck}
+            className="w-auto"
+            isDisabled={!!isCorrect}
+          >
             Submit
           </Button>
         </div>

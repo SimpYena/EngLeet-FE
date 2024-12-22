@@ -24,7 +24,7 @@ const register = async (payload: User) => {
     })
     .catch(({ response }) => {
       console.log(response);
-      return response.data.error;
+      return response?.data.error;
     });
 };
 
@@ -40,9 +40,9 @@ const login = async (payload: User): Promise<any> => {
         return user;
       });
     })
-    .catch((response) => {
+    .catch(({ response }) => {
       console.log(response);
-      return response.data.error;
+      return response?.data.error;
     });
 };
 
@@ -74,8 +74,11 @@ const loadCurrentUser = async () => {
   });
 };
 
-const getRankers = async (limit: number | string, offset: number | string): Promise<any> => {
-  return UserApi.getLeaderboard(limit, offset).then(({items}) => {
+const getRankers = async (
+  limit: number | string,
+  offset: number | string
+): Promise<any> => {
+  return UserApi.getLeaderboard(limit, offset).then(({ items }) => {
     return items.map((ranker, index) => {
       return {
         ...ranker,

@@ -12,6 +12,7 @@ export interface Quiz {
 export interface Transcript {
   type?: string;
   id?: number;
+  title?: string;
   acceptance?: number;
   context?: string;
   difficulty?: string;
@@ -21,6 +22,8 @@ export interface Transcript {
   score?: number;
   audio_link?: string | null;
   audio?: File | null;
+  previousQuizz?: Transcript;
+  nextQuizz?: Transcript;
 
 }
 
