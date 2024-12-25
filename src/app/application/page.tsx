@@ -473,7 +473,7 @@ function RecommendQuizz() {
         setRecommendQuizz(data);
       } catch (error) {
         console.log(error);
-        toast.error("Fetch recommend quizz failed");
+        // toast.error("Fetch recommend quizz failed");
       }
     };
     fetchQuizzes();

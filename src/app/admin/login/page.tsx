@@ -10,7 +10,7 @@ import {
   NavbarItem,
 } from "@nextui-org/react";
 import Image from "next/image";
-import banner from "../public/images/banner.png";
+import banner from "../../public/images/banner.png";
 
 import { ChangeEvent, Suspense, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
