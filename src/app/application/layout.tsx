@@ -3,7 +3,7 @@ import Sidebar from "@/components/sidebar";
 import { useUser } from "@/provider/AuthContent";
 
 export default function ApplicationLayout({
-  children,
+  children
 }: {
   children: React.ReactNode;
 }) {
@@ -16,9 +16,13 @@ export default function ApplicationLayout({
           <Sidebar />
         </div>
       </aside>
-      <div className="container mx-auto p-6 max-w-[1024px] space-y-6 overflow-y-auto h-screen">
-      {children}
+      <div className="flex-1 h-screen overflow-y-auto">
+        <div className="container mx-auto p-6 max-w-[1024px] space-y-6">
+          {children}
+        </div>
       </div>
     </div>
-  ): <div>Loading.....</div>;
+  ) : (
+    <div>Loading.....</div>
+  );
 }
