@@ -2,7 +2,7 @@
 import { DataTable } from "@/components/table";
 import { Input } from "@/app/application/ui/input";
 import { Select, SelectItem, Button } from "@nextui-org/react";
-import { CheckCircle2, ChevronDown, FileBarChart, Shuffle, Search, X } from "lucide-react";
+import { CheckCircle2, FileBarChart, Shuffle, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   mapColorToDifficulty,
@@ -17,11 +17,13 @@ import _ from "lodash";
 
 export default function QuizManagement() {
   const DIFFICULTIES = [
+    // { key: 'None', label: 'None', isDisabled: true },
     { key: "Easy", label: "Easy" },
     { key: "Medium", label: "Medium" },
     { key: "Hard", label: "Hard" }
   ];
   const TOPICS = [
+    // { key: 'None', label: 'None', isDisabled: true },
     { key: "School", label: "School" },
     { key: "Environment", label: "Environment" },
     { key: "Culture", label: "Culture" },
@@ -33,6 +35,7 @@ export default function QuizManagement() {
     { key: "Science", label: "Science" }
   ];
   const TYPE = [
+    // { key: 'None', label: 'None', isDisabled: true },
     { key: "Reading", label: "Reading" },
     { key: "Listening", label: "Listening" }
   ];
@@ -147,7 +150,7 @@ export default function QuizManagement() {
       header: "Action",
       accessor: (row: Quiz) => (
         <Button
-          onClick={() => {
+          onPress={() => {
             router.push(`/application/quiz/${row.id}`);
           }}
           variant="solid"
@@ -193,13 +196,19 @@ export default function QuizManagement() {
           onChange={(e) => updateFilter("keyword", e.target.value)}
           className="flex-grow w-4/5 h-12"
         />
-        <Button variant="solid" color="primary" className="w-1/5  h-12">
-          Filter
-          <ChevronDown className="ml-2 h-4 w-4" />
+        <Button
+          className="h-12"
+          onPress={() => fetchQuizzes(filters.limit, filters.offset)}
+          size={"md"}
+          color="primary"
+        >
+          <Search className="mr-2 h-4 w-4" />
+          Search
         </Button>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         <Select
+          // disabledKeys={["None"]}
           aria-label="difficulties"
           placeholder="Select difficulties"
           value={filters.difficulties}
@@ -211,6 +220,7 @@ export default function QuizManagement() {
         </Select>
 
         <Select
+          // disabledKeys={["None"]}
           aria-label="topics"
           placeholder="Select topics"
           value={filters.topics}
@@ -222,31 +232,25 @@ export default function QuizManagement() {
         </Select>
 
         <Select
+          // disabledKeys={["None"]}
           aria-label="skills"
           placeholder="Select skills"
           value={filters.skills}
           onChange={(e) => updateFilter("skills", e.target.value)}
         >
           {TYPE.map((type) => (
-            <SelectItem key={type.key}>{type.label}</SelectItem>
+            <SelectItem  key={type.key}>{type.label}</SelectItem>
           ))}
         </Select>
       </div>
-      <div className="flex flex-wrap gap-4 justify-center p-6">
-        <Button size={"md"} variant="solid" color="danger" onClick={() => resetFilter()}>
+      <div className="flex flex-wrap gap-4 justify-end">
+        {/* <Button size={"md"} variant="solid" color="danger" onPress={() => resetFilter()}>
           <X className="mr-2 h-4 w-4" />
           Clear filter
-        </Button>
-        <Button size={"md"} variant="solid" color="success" onClick={() => pickRandomQuiz()}>
+        </Button> */}
+        <Button className="text-white" size={"md"} variant="solid" color="success" onPress={() => pickRandomQuiz()}>
           <Shuffle className="mr-2 h-4 w-4" />
           Pick random quizz
-        </Button>
-        <Button
-          onClick={() => fetchQuizzes(filters.limit, filters.offset)}
-          size={"md"}
-        >
-          <Search className="mr-2 h-4 w-4" />
-          Search
         </Button>
       </div>
 

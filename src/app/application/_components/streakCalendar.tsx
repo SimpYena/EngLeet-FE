@@ -5,7 +5,6 @@ import { Calendar } from "@/components/ui/calendar";
 import moment from "moment";
 
 export default function StreakCalendar({ dates = [] }: { dates: string[] }) {
-  const [markedDates, setMarkedDates] = React.useState<Date[]>([]);
   const [parsedDates, setParsedDates] = React.useState<Date[]>([]);
   React.useEffect(() => {
     const p = dates.map((date) => moment(date, "YYYY/MM/DD").toDate());
@@ -13,7 +12,7 @@ export default function StreakCalendar({ dates = [] }: { dates: string[] }) {
   }, [dates]);
 
   return (
-    <div className="space-y-4">
+    <div className="">
       <Calendar
         mode="multiple"
         selected={parsedDates}

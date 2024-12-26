@@ -125,7 +125,7 @@ function Ranking() {
   const [rankers, setRankers] = useState<Ranker[]>([]);
   useEffect(() => {
     const fetchData = async () => {
-      const data = await userService.getRankers(5, 0);
+      const data = await userService.getRankers(3, 0);
       setRankers(data);
     };
     fetchData();
@@ -159,7 +159,7 @@ function Ranking() {
               </div>
             </div>
           </div>
-          <div className="space-y-4 p-2 h-[140px] overflow-y-scroll">
+          <div className="space-y-4 p-2 h-[140px] overflow-y-auto">
             {rankers.slice(1).map((user, index) => (
               <div
                 key={index}

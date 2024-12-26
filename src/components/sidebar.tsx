@@ -1,11 +1,12 @@
-import React from "react";
+import React, { act } from "react";
 import {
   Home,
   FileText,
   HelpCircle,
   Trophy,
   User,
-  Settings
+  Settings,
+  LogOut
 } from "lucide-react";
 import logo from "./../app/public/images/logo.png";
 import Image from "next/image";
@@ -26,37 +27,52 @@ const NAV_ITEMS = [
     title: "Homepage",
     icon: Home,
     path: "/application",
-    label: "Home"
+    label: "Home",
+    action: () => {}
   },
   {
     title: "Test",
     icon: FileText,
     path: "/application/test",
-    label: "Tests"
+    label: "Tests",
+    action: () => {}
   },
   {
     title: "Quiz",
     icon: HelpCircle,
     path: "/application/quiz",
-    label: "Quiz"
+    label: "Quiz",
+    action: () => {}
   },
   {
     title: "Rank",
     icon: Trophy,
     path: "/application/leaderboard",
-    label: "Leaderboard"
+    label: "Leaderboard",
+    action: () => {}
   },
   {
     title: "Profile",
     icon: User,
     path: "/application/profile",
-    label: "Profile"
+    label: "Profile",
+    action: () => {}
   },
   {
-    title: "Setting",
-    icon: Settings,
-    path: "/setting",
-    label: "Settings"
+    title: "Logout",
+    icon: LogOut,
+    path: "",
+    label: "Logout",
+    action: async () => {
+        await userService.logout().then(() => {
+          localStorage.removeItem("user");
+          localStorage.removeItem("test");
+          localStorage.removeItem("testTimer");
+          destroyCookie(null, "el-refresh-token");
+          destroyCookie(null, "el-access-token");
+          window.location.href = "/auth/login";
+        });
+    }
   }
 ];
 
@@ -86,7 +102,7 @@ export default function Sidebar() {
               const isActive = pathname === item.path;
 
               return (
-                <Link href={item.path} key={item.path} className="text-lg">
+                <Link href={item.path} onClick={item.action} key={item.path} className="text-lg">
                   <div
                     className={`w-full flex items-center px-4 py-2 rounded-lg text-left cursor-pointer ${
                       isActive ? "font-bold" : "text-gray-700 hover:bg-gray-100"
@@ -101,63 +117,6 @@ export default function Sidebar() {
           </ul>
         </nav>
       </div>
-
-      <div className="flex items-center justify-center mt-auto pb-12">
-        <div className="px-4 pt-10">
-          <UserProfile />
-        </div>
-      </div>
     </div>
   );
 }
-
-const UserProfile = () => {
-  const logout = async () => {
-    await userService.logout().then(() => {
-      localStorage.removeItem("user");
-      localStorage.removeItem("test");
-      localStorage.removeItem("testTimer");
-      destroyCookie(null, "el-refresh-token");
-      destroyCookie(null, "el-access-token");
-      window.location.href = "/auth/login";
-    });
-  };
-
-  return (
-    <div className="flex items-center gap-4 p-4">
-      <div className="flex items-center gap-2 cursor-pointer">
-        <img
-          src="https://i.pinimg.com/550x/bc/17/4e/bc174e193f9b0fa89655adcbdd6bb5f1.jpg"
-          alt="User Avatar"
-          className="w-10 h-10 rounded-full object-cover"
-        />
-
-        <Dropdown>
-          <DropdownTrigger>
-            <a href="#">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-4 h-4 text-black"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </a>
-          </DropdownTrigger>
-          <DropdownMenu aria-label="Static Actions">
-            <DropdownItem key="logout" onClick={logout}>
-              Logout
-            </DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-      </div>
-    </div>
-  );
-};

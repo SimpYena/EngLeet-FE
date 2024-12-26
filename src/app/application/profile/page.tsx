@@ -18,51 +18,56 @@ import { useEffect, useState } from "react";
 import apiService from "@/utils/apis/user.service";
 import toast from "@/components/toast";
 import moment from "moment";
+import Image from "next/image";
 
 export default function Page() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const currentUser = useUser();
   const [user, setUser] = useState(currentUser);
   const [streak, setStreak] = useState(0);
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState<any>(null);
 
   function longestStreakIncludingToday(dates) {
-    const today = moment().startOf('day');
-    const parsedDates = dates.map(date => moment(date, 'YYYY/MM/DD').startOf('day'));
+    const today = moment().startOf("day");
+    const parsedDates = dates.map((date) =>
+      moment(date, "YYYY/MM/DD").startOf("day")
+    );
 
     // Filter dates that are <= today and sort in descending order
     const validDates = parsedDates
-        .filter(date => date.isSameOrBefore(today))
-        .sort((a, b) => b.diff(a));
+      .filter((date) => date.isSameOrBefore(today))
+      .sort((a, b) => b.diff(a));
 
     let longestStreak = 0;
     let currentStreak = 0;
 
     for (let i = 0; i < validDates.length; i++) {
-        if (i === 0 && validDates[i].isSame(today)) {
-            currentStreak = 1; // Start streak if the first date is today
-        } else if (validDates[i].add(1, 'days').isSame(validDates[i - 1])) {
-            currentStreak++; // Increment streak if consecutive
-        } else {
-            longestStreak = Math.max(longestStreak, currentStreak); // Update longest streak
-            currentStreak = validDates[i].isSame(today) ? 1 : 0; // Reset streak
-        }
+      if (i === 0 && validDates[i].isSame(today)) {
+        currentStreak = 1; // Start streak if the first date is today
+      } else if (validDates[i].add(1, "days").isSame(validDates[i - 1])) {
+        currentStreak++; // Increment streak if consecutive
+      } else {
+        longestStreak = Math.max(longestStreak, currentStreak); // Update longest streak
+        currentStreak = validDates[i].isSame(today) ? 1 : 0; // Reset streak
+      }
     }
 
     // Final check for the last streak
     longestStreak = Math.max(longestStreak, currentStreak);
 
     return longestStreak;
-}
-
-const updateImage = (e) => {
-  const file = e.target.files[0];
-  if (!file.type.startsWith('image/')) {
-    toast.error('Please select an image file');
-    return;
   }
-  setImage(file);
-};
+
+  const updateImage = (e) => {
+    e.preventDefault();
+    const file = e.target.files[0];
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+
+    setImage(file);
+  };
 
   useEffect(() => {
     setUser(currentUser);
@@ -76,8 +81,8 @@ const updateImage = (e) => {
   }, []);
 
   const updateProfile = () => {
-    console.log('a',image);
-    
+    console.log("a", image);
+
     apiService
       .updateProfile(user, image)
       .then(async () => {
@@ -96,7 +101,13 @@ const updateImage = (e) => {
       <h1 className="text-4xl font-bold">Profile</h1>
       <div className="flex flex-col gap-4">
         <div className="relative">
-          <div className="w-full h-40 bg-gray-200 rounded-lg"></div>
+          <div className="w-full h-40 bg-gray-200 rounded-lg overflow-hidden object-contain">
+            <img
+              className="w-full h-full"
+              src="https://pbs.twimg.com/media/Ge2jlGgbUAAGcPe?format=jpg&name=4096x4096"
+              alt=""
+            />
+          </div>
         </div>
         {/* profile info */}
         <div className="flex gap-4 h-20">
@@ -166,7 +177,9 @@ const updateImage = (e) => {
               <div className="flex items-center gap-2">
                 <Calendar className="w-12 h-12 text-[#007bff]"></Calendar>
                 <div>
-                  <p className="text-2xl font-bold">{moment(user.created_at).format('yyyy/MM/DD')}</p>
+                  <p className="text-2xl font-bold">
+                    {moment(user.created_at).format("yyyy/MM/DD")}
+                  </p>
                   <p className="text-gray-500">Join date</p>
                 </div>
               </div>
@@ -199,7 +212,20 @@ const updateImage = (e) => {
                     setUser({ ...user, full_name: e.target.value })
                   }
                 />
-                <Input className="mb-2" label="Image" type="file" onChange={updateImage} />
+                <Input
+                  className="mb-2"
+                  label="Avatar"
+                  type="file"
+                  onChange={updateImage}
+                />
+                <div className="w-20 h-20 rounded-full bg-gray-200 rounded-lg overflow-hidden object-contain relative">
+                  {image && <Image
+                    fill
+                    className="w-full h-full relative"
+                    src={URL.createObjectURL(image || '')}
+                    alt=""
+                  />}
+                </div>
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>
