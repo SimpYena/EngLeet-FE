@@ -6,7 +6,7 @@ import { TestFilter, TestPayload, TestSubmitPayload } from "@/types/test.type";
 import axiosInterceptorInstance from "./axios";
 import { parseCookies } from "nookies";
 
-const API_ENDPOINT = "http://18.142.54.43:3000/api/v1";
+const API_ENDPOINT = "https://18.142.54.43.nip.io/api/v1";
 
 const refreshToken = async (): Promise<any> => {
   const cookies = parseCookies();

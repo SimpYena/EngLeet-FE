@@ -4,7 +4,7 @@ import authServices from "./user.service";
 import userService from "../services/user.service";
 
 const axiosInterceptorInstance = axios.create({
-  baseURL: "http://18.142.54.43:3000/api/v1",
+  baseURL: "https://18.142.54.43.nip.io/api/v1",
   headers: {
     "Content-Type": "application/json"
   }
