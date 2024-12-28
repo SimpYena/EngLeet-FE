@@ -9,7 +9,7 @@ export default function VerifyEmail() {
       <div className="mx-auto space-y-6 p-6">
         <main className="max-w-4xl mx-auto px-4 py-12 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Register successfully
+            Email has been sent
           </h1>
           <h2 className="text-xl md:text-2xl mb-12">
             Please check your email inbox to verify your email

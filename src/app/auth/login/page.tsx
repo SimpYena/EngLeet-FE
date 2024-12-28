@@ -148,15 +148,21 @@ function LoginForm() {
             <span className="text-danger mt-2 ml-1">{errors.password}</span>
           )}
         </div>
-        <Button className="w-full bg-black text-white" onClick={handleSubmit}>
+        <Button className="w-full bg-black text-white" onPress={handleSubmit}>
           Login
         </Button>
-        <div className="mt-4">
-          <Link href="/auth/register" className="text-gray-500 mt-3 mb-6">
-            Not having account yet?
+        <div className="mt-4 flex justify-between">
+          <Link href="/auth/register" className="text-gray-500 mt-3 mb-6 flex-1">
+            Register new account
           </Link>
+          <div className="text-right flex-1">
+            <Link href="/auth/reset-password" className="text-gray-500 mt-3 mb-6 ">
+              Reset password
+            </Link>
+          </div>
           <br />
-          <div className="text-center">
+        </div>
+        <div className="text-center">
             <Link href="#" color="primary">
               Privacy Policy
             </Link>{" "}
@@ -165,7 +171,6 @@ function LoginForm() {
               Terms of Service
             </Link>
           </div>
-        </div>
       </div>
     </div>
   );

@@ -41,7 +41,6 @@ const login = async (payload: User): Promise<any> => {
       });
     })
     .catch(({ response }) => {
-      console.log(response);
       return response?.data.error;
     });
 };
@@ -88,6 +87,38 @@ const getRankers = async (
   });
 };
 
+const sendVerificationEmail = async (email: string) => {
+  return UserApi.sendVerificationEmail(email)
+    .then(() => {
+      return true;
+    })
+    .catch(({ response }) => {
+      return response?.data.error;
+    });
+};
+
+const verifyResetPasswordToken = async (token: string) => {
+  return UserApi.verifyResetPasswordToken(token)
+    .then(() => {
+      return true;
+    })
+    .catch(({ response }) => {
+      console.log(response);
+      
+      throw new Error(response?.data?.error?.message);
+    });
+};
+
+const resetPassword = async (token: string, password: string) => {
+  return UserApi.resetPassword(token, password)
+    .then(() => {
+      return true;
+    })
+    .catch(({ response }) => {
+      return response?.data.error;
+    });
+};
+
 export default {
   setToken,
   register,
@@ -95,5 +126,8 @@ export default {
   verifyEmail,
   loadCurrentUser,
   refreshToken,
-  getRankers
+  getRankers,
+  sendVerificationEmail,
+  verifyResetPasswordToken,
+  resetPassword
 };

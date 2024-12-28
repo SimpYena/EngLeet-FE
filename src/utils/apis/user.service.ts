@@ -180,6 +180,21 @@ const getStreaks = async (): Promise<any> => {
   return axiosInterceptorInstance.get("/quizz/user/streaks");
 }
 
+const sendVerificationEmail = async (email: string): Promise<any> => {
+  const result = await axios.post(`${API_ENDPOINT}/auth/forgot-password`, { email });
+  return result.data;
+}
+
+const verifyResetPasswordToken = async (token: string): Promise<any> => {
+  const result = await axios.get(`${API_ENDPOINT}/auth/verifiy-reset-password/${token}`);
+  return result.data;
+}
+
+const resetPassword = async (token: string, password: string): Promise<any> => {
+  const result = await axios.patch(`${API_ENDPOINT}/auth/update-password/${token}`, { password });
+  return result.data;
+}
+
 export default {
   register,
   login,
@@ -216,5 +231,8 @@ export default {
   submitQuizzReview,
   getQuizzReview,
   updateProfile,
-  getStreaks
+  getStreaks,
+  sendVerificationEmail,
+  verifyResetPasswordToken,
+  resetPassword
 };
