@@ -25,7 +25,7 @@ import { isEmpty } from "lodash";
 export default function TestInterface({ params }: { params: { id: string } }) {
   const router = useRouter();
   const { id } = params;
-
+  const [section, setSection] = useState("reading");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [readingData, setReadingData] = useState<any>({});
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
@@ -152,7 +152,9 @@ export default function TestInterface({ params }: { params: { id: string } }) {
         ]);
 
         generatedTest = formatTest(generatedTest);
-
+        if (generatedTest.type === "Listening") {
+          setSection("listening");
+        }
         if (submittedTest && submittedTest.length > 0) {
           setSubmitted(true);
 
@@ -315,7 +317,7 @@ export default function TestInterface({ params }: { params: { id: string } }) {
 
           {/* Main Content */}
           <main className="max-w-7xl mx-auto p-4">
-            <Tabs defaultValue="reading" className="space-y-6">
+            <Tabs defaultValue="reading" value={section} className="space-y-6">
               <TabsList className="bg-transparent border-b rounded-none h-auto p-0 space-x-8">
                 {readingData.type === "Reading" && <TabsTrigger
                   value="reading"
