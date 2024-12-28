@@ -23,7 +23,7 @@ axiosInterceptorInstance.interceptors.request.use(
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
-    console.log(config.url);
+
     const specificRoute = ["/quizz/create/listening", "/test", "/auth/profile"]
     // Overwrite header for specific route
     if (["post", "put"].includes(config.method as string) && specificRoute.includes(config.url || "")) {
