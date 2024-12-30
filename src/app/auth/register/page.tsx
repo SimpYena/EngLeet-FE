@@ -66,7 +66,6 @@ export default function Main() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
     const isValid = validateForm();
     if (!isValid) {
       return;
@@ -195,7 +194,7 @@ export default function Main() {
             }
           />
         </div>
-        <Button className="w-full bg-black text-white" onClick={handleSubmit}>
+        <Button className="w-full bg-black text-white" onPress={handleSubmit}>
           Register
         </Button>
         <div className="mt-4">
