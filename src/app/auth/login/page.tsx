@@ -69,7 +69,6 @@ function LoginForm() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
     const isValid = validateForm();
     if (!isValid) {
       return;

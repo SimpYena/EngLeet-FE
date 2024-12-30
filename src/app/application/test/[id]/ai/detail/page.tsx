@@ -282,7 +282,7 @@ export default function TestInterface({ params }: { params: { id: string } }) {
   return (
     <div className="container mx-auto p-6 space-y-6 bg-white overflow-y-auto h-screen">
       <div className="mx-auto space-y-6 p-6 h-4/5">
-        <div className="min-h-screen bg-[#F8F9FE]">
+        <div className="">
           {/* Header */}
           <header className="p-4 flex justify-between items-center max-w-7xl mx-auto">
             <div className="flex items-center gap-4">

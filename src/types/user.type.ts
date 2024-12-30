@@ -5,6 +5,6 @@ export type User = {
   gender?: string,
   password?: string,
   image_link?: string,
-  level: number,
-  created_at: string,
+  level?: number,
+  created_at?: string,
 }
