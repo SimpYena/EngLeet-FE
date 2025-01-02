@@ -14,7 +14,8 @@ import {
   Pencil,
   Send,
   Sparkle,
-  Users
+  Users,
+  X
 } from "lucide-react";
 import { Ranker } from "@/types/leaderboard.type";
 import {
@@ -202,7 +203,7 @@ function AssessmentCard() {
 
   return (
     <div className="bg-white rounded-3xl py-4 px-6 shadow-md h-full">
-      <div className="max-w-md">
+      <div className="">
         <div className="flex items-center font-bold text-lg gap-2 mb-8">
           <Pencil />
           <h3 className="text-lg">Do the assessment test</h3>
@@ -240,7 +241,7 @@ function Streaks() {
     const parsedDates = dates.map((date) =>
       moment(date, "YYYY/MM/DD").startOf("day")
     );
-    
+
     // Sort dates in ascending order
     parsedDates.sort((a, b) => a.diff(b));
 
@@ -287,20 +288,30 @@ function Streaks() {
         <h3 className="text-lg">Streaks</h3>
       </div>
       <div className="rounded-lg">
-        <p className="font-bold mb-4">
-          You are on{" "}
-          <span className="bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text text-transparent">
-            {streak} days streak
-          </span>
-          , keep it up!
-        </p>
+        {streak === 0 ? (
+          <>
+            <p className="font-medium mb-4">
+              You don't have any streak yet, let's start today!
+            </p>
+          </>
+        ) : (
+          <>
+            <p className="font-medium mb-4">
+              You are on{" "}
+              <span className="bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text text-transparent">
+                {streak} days streak
+              </span>
+              , keep it up!
+            </p>
+          </>
+        )}
         <StreakCalendar dates={dates}></StreakCalendar>
       </div>
     </div>
   );
 }
 
-function ChatBot() {
+function ChatBot({ onClose }) {
   const [isWaiting, setIsWaiting] = useState(false);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -366,9 +377,9 @@ function ChatBot() {
             />
             <p className="font-bold">Migu AI</p>
           </div>
-          <div>
-            <button onClick={clearChat}>
-              <MessageSquareX className="" />
+          <div className="flex gap-4">
+            <button onClick={onClose}>
+              <X></X>
             </button>
           </div>
         </div>
@@ -444,6 +455,11 @@ function ChatBot() {
               sendMessage();
             }
           }}
+          startContent={
+            <button onClick={clearChat}>
+              <MessageSquareX className="" />
+            </button>
+          }
           endContent={
             <button onClick={sendMessage}>
               <Send></Send>
@@ -481,7 +497,7 @@ function RecommendQuizz() {
 
   return (
     <div className="bg-white rounded-3xl py-4 px-6 shadow-md h-full">
-      <div className="max-w-md">
+      <div className="">
         <div className="flex justify-between items-center font-bold text-lg gap-2 mb-8">
           <div className="flex gap-2">
             <Pencil />
@@ -489,7 +505,7 @@ function RecommendQuizz() {
           </div>
           <div>
             <Button color="primary" variant="ghost" onPress={goToAssessment}>
-              <span>Do the assessment</span>
+              <span>Retake Assessment</span>
             </Button>
           </div>
         </div>
@@ -577,10 +593,10 @@ export default function Main() {
 
           {/* Assessment Section */}
           <div className="col-span-12 lg:col-span-6 h-[380px]">
-            {isEmpty(user) ? (
-              <AssessmentCard></AssessmentCard>
-            ) : (
+            {user && user.level ? (
               <RecommendQuizz></RecommendQuizz>
+            ) : (
+              <AssessmentCard></AssessmentCard>
             )}
           </div>
 
@@ -598,7 +614,7 @@ export default function Main() {
         <DrawerContent>
           {(onClose) => (
             <>
-              <ChatBot></ChatBot>
+              <ChatBot onClose={onClose}></ChatBot>
             </>
           )}
         </DrawerContent>

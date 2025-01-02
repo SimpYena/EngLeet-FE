@@ -153,7 +153,7 @@ export default function Test() {
               <h3 className="font-bold">All Tests</h3>
             </div>
 
-            <div className="flex items-center gap-2">
+            {/* <div className="flex items-center gap-2">
               <Button variant="ghost" size="sm" className="gap-2 text-lg">
                 <Filter className="h-4 w-4" />
                 Filter
@@ -162,7 +162,7 @@ export default function Test() {
                 <SortDesc className="h-4 w-4" />
                 Sort By
               </Button>
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -185,7 +185,7 @@ export default function Test() {
               <h3 className="font-bold">Generated Tests</h3>
             </div>
 
-            <div className="flex items-center gap-2">
+            {/* <div className="flex items-center gap-2">
               <Button variant="ghost" size="sm" className="gap-2 text-lg">
                 <Filter className="h-4 w-4" />
                 Filter
@@ -194,7 +194,7 @@ export default function Test() {
                 <SortDesc className="h-4 w-4" />
                 Sort By
               </Button>
-            </div>
+            </div> */}
           </div>
         </div>
 

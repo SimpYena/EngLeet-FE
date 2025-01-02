@@ -111,41 +111,59 @@ export default function Page() {
         </div>
         {/* profile info */}
         <div className="flex gap-4 h-20">
-          <div className="relative w-40">
-            <div className="absolute inset-0 left-6 top-[-20px] flex items-end">
+          <div className="relative size-20 sm:size-40">
+            <div className="absolute size-16 sm:size-32 inset-0 left-6 top-0 sm:top-[-20px] flex items-end">
               <Avatar
                 isBordered
                 src={user.image_link}
                 alt="profile"
-                className="object-cover rounded-full w-32 h-32"
+                className="object-cover rounded-full w-full h-full"
               />
             </div>
           </div>
-          <div className="flex flex-col gap-2 ml-46">
-            {isEmpty(user) ? (
-              <>
-                <Skeleton className="h-4 w-[100px] rounded-lg" />
-                <Skeleton className="h-3 w-[150px] rounded-lg" />
-              </>
-            ) : (
-              <>
-                <p className="text-2xl font-bold">{user.full_name}</p>
-                <p className="text-gray-500">{user.email}</p>
-              </>
-            )}
-          </div>
-          <div className="flex items-center justify-end flex-1">
-            <Button color="primary" variant="solid" size="sm" onPress={onOpen}>
-              <Edit size={16} />
-              Edit Profile
-            </Button>
+          <div className="flex justify-between flex-1 ml-46">
+            <div className="flex flex-col gap-2 flex-1">
+              {isEmpty(user) ? (
+                <>
+                  <Skeleton className="h-4 w-[100px] rounded-lg" />
+                  <Skeleton className="h-3 w-[150px] rounded-lg" />
+                </>
+              ) : (
+                <>
+                  <div className="flex">
+                    <p className="text-2xl font-bold">{user.full_name}</p>
+                    <Button
+                      isIconOnly
+                      color="primary"
+                      variant="light"
+                      size="sm"
+                      onPress={onOpen}
+                    >
+                      <Edit size={16} />
+                    </Button>
+                  </div>
+                  <p className="text-gray-500">{user.email}</p>
+                </>
+              )}
+            </div>
+            <div className="flex justify-end hidden sm:block">
+              <Button
+                color="primary"
+                variant="solid"
+                size="sm"
+                onPress={onOpen}
+              >
+                <Edit size={16} />
+                Edit Profile
+              </Button>
+            </div>
           </div>
         </div>
 
         {/* statistic */}
         <div className="my-6">
           <h2 className="text-2xl font-bold mb-4">Statistic</h2>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="bg-white p-4 rounded-lg shadow-md">
               <div className="flex items-center gap-2">
                 <Flame className="text-[#ff0000] w-12 h-12"></Flame>
@@ -219,12 +237,14 @@ export default function Page() {
                   onChange={updateImage}
                 />
                 <div className="w-20 h-20 rounded-full bg-gray-200 rounded-lg overflow-hidden object-contain relative">
-                  {image && <Image
-                    fill
-                    className="w-full h-full relative"
-                    src={URL.createObjectURL(image || '')}
-                    alt=""
-                  />}
+                  {image && (
+                    <Image
+                      fill
+                      className="w-full h-full relative"
+                      src={URL.createObjectURL(image || "")}
+                      alt=""
+                    />
+                  )}
                 </div>
               </ModalBody>
               <ModalFooter>
