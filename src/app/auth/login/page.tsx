@@ -1,5 +1,5 @@
 "use client";
-import { Input, Button, Link } from "@nextui-org/react";
+import { Input, Button, Link, form } from "@nextui-org/react";
 import { ChangeEvent, Suspense, useEffect, useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import UserService from "@/utils/services/user.service";
@@ -45,6 +45,14 @@ function LoginForm() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
+
   const validateForm = () => {
     const newErrors = {
       email: "",
@@ -58,13 +66,18 @@ function LoginForm() {
       newErrors.password = "Password is required.";
     }
 
+    if (formData.email && !validateEmail(formData.email)) {
+      newErrors.email = "Invalid email format.";
+    }
+
     setErrors(newErrors);
 
-    Object.keys(newErrors).forEach((key) => {
+    for (const key in newErrors) {  
       if (newErrors[key]) {
         return false;
       }
-    });
+    }
+
     return true;
   };
 
@@ -114,11 +127,9 @@ function LoginForm() {
             name="email"
             label="Email"
             fullWidth
+            errorMessage={errors.email}
             type="email"
           />
-          {errors.email && (
-            <span className="text-danger mt-2 ml-1">{errors.email}</span>
-          )}
         </div>
         <div className="mb-6">
           <Input
@@ -127,6 +138,7 @@ function LoginForm() {
             name="password"
             label="Password"
             fullWidth
+            errorMessage={errors.password}
             type={isPasswordVisible ? "text" : "password"}
             endContent={
               <button
@@ -143,9 +155,6 @@ function LoginForm() {
               </button>
             }
           />
-          {errors.password && (
-            <span className="text-danger mt-2 ml-1">{errors.password}</span>
-          )}
         </div>
         <Button className="w-full bg-black text-white" onPress={handleSubmit}>
           Login
