@@ -21,6 +21,17 @@ import {
   DropdownTrigger
 } from "@nextui-org/react";
 import userService from "@/utils/apis/user.service";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem
+} from "./ui/sidebar";
 
 const NAV_ITEMS = [
   {
@@ -64,37 +75,92 @@ const NAV_ITEMS = [
     path: "",
     label: "Logout",
     action: async () => {
-        await userService.logout().then(() => {
-          localStorage.removeItem("user");
-          localStorage.removeItem("test");
-          localStorage.removeItem("testTimer");
-          destroyCookie(null, "el-refresh-token");
-          destroyCookie(null, "el-access-token");
-          window.location.href = "/auth/login";
-        });
+      await userService.logout().then(() => {
+        localStorage.removeItem("user");
+        localStorage.removeItem("test");
+        localStorage.removeItem("testTimer");
+        destroyCookie(null, "el-refresh-token");
+        destroyCookie(null, "el-access-token");
+        window.location.href = "/auth/login";
+      });
     }
   }
 ];
 
-export default function Sidebar() {
+export default function Main() {
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-col h-screen w-72 bg-white border-r border-gray-200">
-      <div className="flex flex-col items-center pt-2">
-        <div className="p-6">
-          <div className="flex flex-col items-center space-y-2">
+    // <div className="flex flex-col h-screen w-72 bg-white border-r border-gray-200">
+    //   <div className="flex flex-col items-center pt-2">
+    //     <div className="p-6">
+    //       <div className="flex flex-col items-center space-y-2">
+    //         <Image
+    //           src={logo}
+    //           alt="logo"
+    //           className="object-cover"
+    //           width={100}
+    //           height={80}
+    //         />
+    //         <span className="text-xl font-bold text-blue-600">ENGLEET</span>
+    //       </div>
+    //     </div>
+
+    //     <nav className="flex-1 px-4 pt-10">
+    //       <ul className="space-y-2">
+    //         {NAV_ITEMS.map((item) => {
+    //           const Icon = item.icon;
+    //           const isActive = pathname === item.path;
+
+    //           return (
+    //             <Link href={item.path} onClick={item.action} key={item.path} className="text-lg">
+    //               <div
+    //                 className={`w-full flex items-center px-4 py-2 rounded-lg text-left cursor-pointer ${
+    //                   isActive ? "font-bold" : "text-gray-700 hover:bg-gray-100"
+    //                 }`}
+    //               >
+    //                 <Icon className="w-5 h-5 mr-3" />
+    //                 <span>{item.label}</span>
+    //               </div>
+    //             </Link>
+    //           );
+    //         })}
+    //       </ul>
+    //     </nav>
+    //   </div>
+    // </div>
+    <Sidebar>
+      <SidebarHeader>
+        <div className="flex flex-col items-center pt-2 overflow-hidden">
+          <div className="flex flex-col gap-2 items-center w-full">
             <Image
               src={logo}
               alt="logo"
-              className="object-cover"
-              width={100}
+              className="object-contain"
+              width={80}
               height={80}
             />
             <span className="text-xl font-bold text-blue-600">ENGLEET</span>
           </div>
         </div>
-
+      </SidebarHeader>
+      <SidebarContent>
+        {/* <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+            {NAV_ITEMS.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild className="font-medium">
+                    <a href={item.path} onClick={item.action}>
+                      <item.icon />
+                      <span className="text-md">{item.title}</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup> */}
         <nav className="flex-1 px-4 pt-10">
           <ul className="space-y-2">
             {NAV_ITEMS.map((item) => {
@@ -102,7 +168,12 @@ export default function Sidebar() {
               const isActive = pathname === item.path;
 
               return (
-                <Link href={item.path} onClick={item.action} key={item.path} className="text-lg">
+                <Link
+                  href={item.path}
+                  onClick={item.action}
+                  key={item.path}
+                  className="text-lg"
+                >
                   <div
                     className={`w-full flex items-center px-4 py-2 rounded-lg text-left cursor-pointer ${
                       isActive ? "font-bold" : "text-gray-700 hover:bg-gray-100"
@@ -116,7 +187,8 @@ export default function Sidebar() {
             })}
           </ul>
         </nav>
-      </div>
-    </div>
+      </SidebarContent>
+      <SidebarFooter />
+    </Sidebar>
   );
 }

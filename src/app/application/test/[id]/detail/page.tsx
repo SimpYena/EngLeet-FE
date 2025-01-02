@@ -463,7 +463,7 @@ export default function TestInterface({ params }: { params: { id: string } }) {
                             />
                             <label
                               htmlFor={`q${currentQuestionIndex}-choice${index}`}
-                              className="text-sm font-medium"
+                              className={`text-sm font-medium ${(readingData.question[currentQuestionIndex].correct_answer === choice) ? 'text-success' : ''}`}
                             >
                               {choice}
                             </label>
@@ -561,7 +561,7 @@ export default function TestInterface({ params }: { params: { id: string } }) {
                             />
                             <label
                               htmlFor={`q${currentQuestionIndex}-choice${index}`}
-                              className="text-sm font-medium"
+                              className={`text-sm font-medium ${(listeningData.question[currentQuestionIndex].correct_answer === choice) ? 'text-success' : ''}`}
                             >
                               {choice}
                             </label>
