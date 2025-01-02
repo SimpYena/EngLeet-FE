@@ -8,10 +8,22 @@ import { Button, Input, Link } from "@nextui-org/react";
 export default function Main() {
   const router = useRouter();
   const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async () => {
+    if (!email) {
+      setError("Email is required.");
+      return;
+    }
+
+    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      setError("Invalid email.");
+      return;
+    }
+
     const result = await UserService.sendVerificationEmail(email);
     if (result?.error) {
+      setError(result.error);
       toast.error(result.error);
     }
 
@@ -30,9 +42,10 @@ export default function Main() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             name="email"
+            errorMessage={error}
             label="Email"
             fullWidth
-            type="email"
+            type="text"
           />
         </div>
         <Button className="w-full bg-black text-white" onPress={handleSubmit}>
