@@ -32,7 +32,7 @@ export default function AssessmentTest({ params }: { params: { id: string } }) {
     const timers = JSON.parse(getItem("testTimer")) || [];
     const timer = timers.find((timer: any) => timer.id === `g-${id}`);
     if (!timer) {
-      const duration = testDetails?.duration?.split(" ") || [0, "minutes"];
+      const duration = testDetails?.duration?.split(" ") || [45, "minutes"];
       setItemIntoStorage(
         "testTimer",
         JSON.stringify([

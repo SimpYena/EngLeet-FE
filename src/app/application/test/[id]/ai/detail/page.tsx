@@ -5,8 +5,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Timer } from "lucide-react";
 import Image from "next/image";
 import logo from "@/app/public/images/logo.png";
-import api from "@/utils/apis/user.service";
-import userService from "@/utils/services/user.service";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getItem, setItemIntoStorage } from "@/utils/localStorage";
@@ -21,13 +19,13 @@ import {
   Button
 } from "@nextui-org/react";
 import testService from "@/utils/services/test.service";
-import { isEmpty } from "lodash";
+import { cloneDeep } from "lodash";
 export default function TestInterface({ params }: { params: { id: string } }) {
-  const router = useRouter();
   const { id } = params;
   const [section, setSection] = useState("reading");
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [readingData, setReadingData] = useState<any>({});
+  const [correctAnswers, setCorrectAnswers] = useState<any>({});
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -51,9 +49,7 @@ export default function TestInterface({ params }: { params: { id: string } }) {
   }
 
   const formatTest = (generatedTest) => {
-    console.log(generatedTest);
-    
-    return {
+    const a = {
       id: generatedTest.content.sectionContext[0].id,
       title: generatedTest.title,
       type: generatedTest.type,
@@ -65,10 +61,11 @@ export default function TestInterface({ params }: { params: { id: string } }) {
           question: question.question,
           answer: question.answer,
           choosenAnswer: null,
-          correct_answer: question.correct_answer
+          correct_answer: question["correct answer"]
         })
       )
     }
+    return a;
   }
 
   // Format the time as hh:mm:ss
@@ -155,24 +152,26 @@ export default function TestInterface({ params }: { params: { id: string } }) {
         if (generatedTest.type === "Listening") {
           setSection("listening");
         }
-        if (submittedTest && submittedTest.length > 0) {
-          setSubmitted(true);
 
-          generatedTest.questions = generatedTest.questions.map((question) => {
-            const matchQuestion = submittedTest.find(
-              (q) => q.question_id === question.id
-            );
-            return {
-              ...question,
-              choosenAnswer: matchQuestion.answer,
-              correct_answer: matchQuestion.correct_answer
-            };
-          });
+        setCorrectAnswers(generatedTest.questions);
+        // if (submittedTest && submittedTest.length > 0) {
+        //   setSubmitted(true);
 
-          setReadingData(generatedTest);
-          setLoading(false);
-          return;
-        }
+        //   generatedTest.questions = generatedTest.questions.map((question) => {
+        //     const matchQuestion = submittedTest.find(
+        //       (q) => q.question_id === question.id
+        //     );
+        //     return {
+        //       ...question,
+        //       choosenAnswer: matchQuestion.answer,
+        //       correct_answer: matchQuestion.correct_answer
+        //     };
+        //   });
+
+        //   setReadingData(generatedTest);
+        //   setLoading(false);
+        //   return;
+        // }
 
         const isTestExist = storageTest.find((item) => item.id === id);
 
@@ -265,18 +264,19 @@ export default function TestInterface({ params }: { params: { id: string } }) {
   };
 
   const submitTest = async () => {
-    // handle submit test
-
-    await api
-      .submitGeneratedTest(id, [
-        ...readingData.questions.map((question) => (question.choosenAnswer))
-      ])
-      .then(() => {
-        router.push(`/application/test/${id}/result`);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    setSubmitted(true);
+    setReadingData((prev) => {
+      return {
+        ...prev,
+        questions: prev.questions.map((question, index) => {
+          return {
+            ...question,
+            correct_answer: correctAnswers[index].correct_answer
+          };
+        })
+      };
+    })
+    onClose();
   };
 
   return (
@@ -299,7 +299,7 @@ export default function TestInterface({ params }: { params: { id: string } }) {
                 <h1 className="font-medium">{readingData.title}</h1>
               </div>
             </div>
-            {(timeLeft.total > 0 && isEmpty(submitted)) && (
+            {(timeLeft.total > 0 && !submitted) && (
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Timer className="w-5 h-5" />
@@ -308,7 +308,7 @@ export default function TestInterface({ params }: { params: { id: string } }) {
                   </span>
                 </div>
 
-                <Button variant="solid" color="danger" onClick={onOpen}>
+                <Button variant="solid" color="danger" onPress={onOpen}>
                   End now
                 </Button>
               </div>
@@ -382,7 +382,7 @@ export default function TestInterface({ params }: { params: { id: string } }) {
                             />
                             <label
                               htmlFor={`q${currentQuestionIndex}-choice${index}`}
-                              className="text-sm font-medium"
+                              className={`text-sm font-medium ${(submitted && readingData?.questions[currentQuestionIndex].correct_answer === choice) ? 'text-success' : ''}`}
                             >
                               {choice}
                             </label>
@@ -484,7 +484,7 @@ export default function TestInterface({ params }: { params: { id: string } }) {
                             />
                             <label
                               htmlFor={`q${currentQuestionIndex}-choice${index}`}
-                              className="text-sm font-medium"
+                              className={`text-sm font-medium ${(submitted && readingData?.questions[currentQuestionIndex].correct_answer === choice) ? 'text-success' : ''}`}
                             >
                               {choice}
                             </label>
